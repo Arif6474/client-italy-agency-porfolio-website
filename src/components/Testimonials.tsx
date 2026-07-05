@@ -1,192 +1,198 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
-import { Quote, ArrowLeft, ArrowRight, Star } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 
 interface TestimonialItem {
   quote: string;
   author: string;
   role: string;
-  initials: string;
+  avatar: string;
+  color: string;
 }
 
 const testimonials: TestimonialItem[] = [
   {
-    quote: "StudioWebDigital completely transformed our digital presence. The team's professionalism and attention to detail exceeded expectations. Our sales increased by 180% in the first quarter!",
+    quote:
+      "Exceeded our expectations with innovative designs that brought our vision to life — a truly remarkable creative agency.",
+    author: "Samantha Johnson",
+    role: "CEO and Co-founder of ABC Company",
+    avatar: "SJ",
+    color: "bg-amber-500",
+  },
+  {
+    quote:
+      "Their ability to capture our brand essence in every project is unparalleled — an invaluable creative collaborator.",
+    author: "Isabella Rodriguez",
+    role: "Brand Director at Nova Creative",
+    avatar: "IR",
+    color: "bg-rose-500",
+  },
+  {
+    quote:
+      "Creative geniuses who listen, understand, and craft captivating visuals — an agency that truly understands our needs.",
+    author: "Gabrielle Williams",
+    role: "CEO and Co-founder of Luxe Studio",
+    avatar: "GW",
+    color: "bg-violet-500",
+  },
+  {
+    quote:
+      "StudioWebDigital completely transformed our digital presence. Sales increased by 180% in the first quarter after launch!",
     author: "Lucia Santoro",
     role: "CEO, Italian Fashion House",
-    initials: "LS",
+    avatar: "LS",
+    color: "bg-emerald-500",
   },
   {
-    quote: "The AI chatbot they built handles 80% of our customer inquiries automatically. It's intelligent, natural-sounding, and has dramatically improved our customer satisfaction scores.",
+    quote:
+      "From concept to execution, their creativity knows no bounds — a game-changer for our brand's success.",
+    author: "Natalie Martinez",
+    role: "CMO at GrowthLab",
+    avatar: "NM",
+    color: "bg-pink-500",
+  },
+  {
+    quote:
+      "Their team's artistic flair and strategic approach resulted in remarkable campaigns — a reliable creative partner.",
+    author: "John Peter",
+    role: "Founder of Apex Brands",
+    avatar: "JP",
+    color: "bg-sky-500",
+  },
+  {
+    quote:
+      "A refreshing and imaginative agency that consistently delivers exceptional results — highly recommended.",
+    author: "Victoria Thompson",
+    role: "Director, Meridian Group",
+    avatar: "VT",
+    color: "bg-orange-500",
+  },
+  {
+    quote:
+      "The AI chatbot they built handles 80% of our inquiries automatically — intelligent, natural, and incredibly effective.",
     author: "Marco Rossi",
-    role: "Founder, Tech Startup",
-    initials: "MR",
+    role: "Founder, Tech Startup Milano",
+    avatar: "MR",
+    color: "bg-indigo-500",
   },
   {
-    quote: "Working with StudioWebDigital was a game-changer. Their social media strategy grew our brand awareness exponentially, and the engagement metrics speak for themselves. Highly recommended!",
+    quote:
+      "Working with StudioWebDigital was a game-changer. Their social strategy grew our brand awareness exponentially.",
     author: "Giulia Bianchi",
     role: "Marketing Director, Beauty Brand",
-    initials: "GB",
+    avatar: "GB",
+    color: "bg-teal-500",
+  },
+  {
+    quote:
+      "Stunning designs delivered on time, every time. The attention to detail and Italian elegance truly sets them apart.",
+    author: "Andrei Popescu",
+    role: "COO at Elevate Digital",
+    avatar: "AP",
+    color: "bg-cyan-500",
   },
 ];
 
+// Split evenly into two rows
+const row1 = testimonials.slice(0, 5);
+const row2 = testimonials.slice(5);
+
+function TestimonialCard({ item }: { item: TestimonialItem }) {
+  return (
+    <div className="flex-shrink-0 w-[300px] sm:w-[340px] md:w-[380px] mr-5 p-5 sm:p-6 rounded-2xl border border-neutral-800/70 bg-neutral-950/70 hover:bg-neutral-900/70 hover:border-neutral-700 transition-all duration-300 text-left flex flex-col gap-4 cursor-default group">
+      {/* Quote mark */}
+      <span className="text-4xl sm:text-5xl font-serif text-neutral-600 leading-none select-none group-hover:text-neutral-500 transition-colors">
+        &#8220;&#8220;
+      </span>
+
+      {/* Quote text */}
+      <p className="text-sm text-neutral-200 leading-relaxed flex-1 font-medium">
+        {item.quote}
+      </p>
+
+      {/* Author */}
+      <div className="flex items-center gap-3">
+        <div
+          className={`w-9 h-9 rounded-full ${item.color} flex items-center justify-center text-[11px] font-bold text-white shrink-0 shadow-md`}
+        >
+          {item.avatar}
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-white leading-tight">{item.author}</p>
+          <p className="text-[11px] text-neutral-500 mt-0.5 leading-tight">{item.role}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MarqueeRow({
+  items,
+  reverse = false,
+}: {
+  items: TestimonialItem[];
+  reverse?: boolean;
+}) {
+  // Duplicate for seamless loop
+  const doubled = [...items, ...items];
+
+  return (
+    <div className="overflow-hidden relative w-full">
+      {/* Left + right gradient masks */}
+      <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
+
+      <div
+        className={`flex w-max ${
+          reverse ? "animate-[marquee-reverse_35s_linear_infinite]" : "animate-[marquee_35s_linear_infinite]"
+        } hover:[animation-play-state:paused]`}
+      >
+        {doubled.map((item, idx) => (
+          <TestimonialCard key={idx} item={item} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Testimonials() {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 18 },
-    },
+  const headerVariants: Variants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
   return (
     <section
       id="testimonials"
-      className="scroll-section px-6 md:px-12 py-24 z-10 w-full overflow-hidden border-t border-neutral-950 bg-[#050505]"
+      className="scroll-section relative px-0 py-0 z-10 w-full overflow-hidden border-t border-neutral-900/60 bg-[#050505] flex flex-col justify-center"
     >
-      <div className="max-w-7xl mx-auto w-full flex flex-col justify-between my-auto">
-        
-        {/* Header */}
-        <div className="text-left max-w-xl space-y-4 mb-14">
-          <p className="text-[10px] tracking-[0.2em] font-mono text-neutral-500 uppercase flex items-center gap-2">
-            <Quote className="w-3.5 h-3.5" />
-            PARTNER VERDICTS
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
-            Client <span className="font-light text-neutral-400 text-glow">Testimonials.</span>
-          </h2>
-          <p className="text-neutral-400 text-sm leading-relaxed">
-            Real feedback from ambitious businesses we have partnered with across digital and automated systems.
-          </p>
-        </div>
+      <div className="w-full flex flex-col gap-6 py-16 sm:py-20">
 
-        {/* Desktop View: 3 Columns Grid */}
+        {/* Header */}
         <motion.div
-          variants={containerVariants}
+          variants={headerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="hidden md:grid grid-cols-3 gap-6"
+          viewport={{ once: true }}
+          className="text-center space-y-3 px-6 mb-4"
         >
-          {testimonials.map((testi, idx) => (
-            <motion.div
-              key={idx}
-              variants={itemVariants}
-              className="group p-8 rounded-2xl border border-neutral-900 bg-neutral-950/20 hover:bg-neutral-950/50 hover:border-neutral-800 transition-all duration-300 flex flex-col text-left justify-between h-[300px] glow-sm"
-            >
-              <div className="space-y-4">
-                <div className="flex gap-0.5 text-white/40">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-current" />
-                  ))}
-                </div>
-                <p className="text-xs text-neutral-400 italic leading-relaxed line-clamp-6 group-hover:text-neutral-300 transition-colors">
-                  "{testi.quote}"
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 mt-6 border-t border-neutral-900/60 pt-4">
-                <div className="w-8 h-8 rounded-full border border-neutral-800 bg-neutral-950 flex items-center justify-center text-[10px] font-bold text-white font-mono shadow-inner">
-                  {testi.initials}
-                </div>
-                <div className="text-left">
-                  <h4 className="text-xs font-bold text-white tracking-tight">{testi.author}</h4>
-                  <p className="text-[10px] text-neutral-500 font-mono mt-0.5 leading-none">{testi.role}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          <p className="text-[10px] tracking-[0.25em] font-mono text-neutral-500 uppercase">
+            ✦ &nbsp; WHAT CLIENTS SAY
+          </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
+            Trusted by{" "}
+            <span className="font-light text-neutral-400">Ambitious Teams.</span>
+          </h2>
+          <p className="text-neutral-500 text-sm leading-relaxed max-w-lg mx-auto">
+            Real feedback from businesses who partnered with us to build extraordinary digital experiences.
+          </p>
         </motion.div>
 
-        {/* Mobile View: Arrow-Based Slide Switcher */}
-        <div className="md:hidden flex flex-col space-y-6">
-          <div className="relative h-[250px] w-full">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.25 }}
-                className="absolute inset-0 p-6 rounded-2xl border border-neutral-900 bg-neutral-950/40 text-left flex flex-col justify-between"
-              >
-                <div className="space-y-4">
-                  <div className="flex gap-0.5 text-white/40">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3 h-3 fill-current" />
-                    ))}
-                  </div>
-                  <p className="text-xs text-neutral-400 italic leading-relaxed line-clamp-6">
-                    "{testimonials[activeIndex].quote}"
-                  </p>
-                </div>
+        {/* Row 1 — scrolls left */}
+        <MarqueeRow items={row1} reverse={false} />
 
-                <div className="flex items-center gap-3 border-t border-neutral-900/60 pt-4">
-                  <div className="w-8 h-8 rounded-full border border-neutral-800 bg-neutral-950 flex items-center justify-center text-[10px] font-bold text-white font-mono">
-                    {testimonials[activeIndex].initials}
-                  </div>
-                  <div className="text-left">
-                    <h4 className="text-xs font-bold text-white">{testimonials[activeIndex].author}</h4>
-                    <p className="text-[9px] text-neutral-500 font-mono mt-0.5">{testimonials[activeIndex].role}</p>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Carousel controls */}
-          <div className="flex justify-between items-center px-2">
-            <div className="flex gap-1.5">
-              {testimonials.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                    idx === activeIndex ? "bg-white w-3" : "bg-neutral-850 bg-neutral-800"
-                  }`}
-                  aria-label={`Go to slide ${idx + 1}`}
-                />
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={handlePrev}
-                className="p-2 rounded-lg border border-neutral-900 bg-neutral-950 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-colors"
-                aria-label="Previous quote"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={handleNext}
-                className="p-2 rounded-lg border border-neutral-900 bg-neutral-950 hover:bg-neutral-900 text-neutral-400 hover:text-white transition-colors"
-                aria-label="Next quote"
-              >
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Row 2 — scrolls right (opposite direction) */}
+        <MarqueeRow items={row2} reverse={true} />
 
       </div>
     </section>
