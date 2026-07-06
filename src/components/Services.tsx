@@ -238,7 +238,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="scroll-section relative px-5 sm:px-8 md:px-12 z-10 w-full overflow-hidden border-t border-neutral-900 bg-[#050505] flex flex-col justify-center"
+      className="scroll-section relative px-5 sm:px-8 md:px-12 z-10 w-full overflow-hidden border-t border-neutral-900 bg-[#050505]"
     >
       {/* Drifting background dots */}
       {dots.map((dot) => (

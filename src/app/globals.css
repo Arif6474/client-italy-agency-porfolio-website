@@ -75,9 +75,6 @@ html, body {
   scroll-snap-stop: always;
   min-height: 100vh;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   position: relative;
   box-sizing: border-box;
 }
