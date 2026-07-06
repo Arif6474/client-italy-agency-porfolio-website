@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, Variants } from "framer-motion";
 import {
   LineChart,
@@ -14,8 +14,17 @@ import {
   Layout,
   CheckCircle,
   ArrowUpRight,
+  Sparkles,
 } from "lucide-react";
 import Modal from "./ui/Modal";
+
+interface BgDot {
+  id: number;
+  size: number;
+  x: number;
+  y: number;
+  duration: number;
+}
 
 interface SubService {
   title: string;
@@ -203,6 +212,18 @@ function AnimatedIcon({ Icon, iconColor }: { Icon: React.ElementType; iconColor:
 
 export default function Services() {
   const [selectedService, setSelectedService] = useState<ServiceDetail | null>(null);
+  const [dots, setDots] = useState<BgDot[]>([]);
+
+  useEffect(() => {
+    const generated = [...Array(14)].map((_, i) => ({
+      id: i,
+      size: Math.random() * 2 + 1,
+      x: Math.random() * 90 + 5,
+      y: Math.random() * 90 + 5,
+      duration: 12 + Math.random() * 10,
+    }));
+    setDots(generated);
+  }, []);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -217,32 +238,74 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="scroll-section relative px-5 sm:px-8 md:px-12 z-10 w-full overflow-hidden border-t border-neutral-900/60 bg-[#050505] flex flex-col justify-center"
+      className="scroll-section relative px-5 sm:px-8 md:px-12 z-10 w-full overflow-hidden border-t border-neutral-900 bg-[#050505] flex flex-col justify-center"
     >
-      <div className="max-w-7xl mx-auto w-full py-[8vh] flex flex-col gap-10">
-
-        {/* Header */}
+      {/* Drifting background dots */}
+      {dots.map((dot) => (
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"
+          key={dot.id}
+          className="absolute rounded-full bg-white pointer-events-none z-0"
+          style={{
+            width: dot.size,
+            height: dot.size,
+            left: `${dot.x}%`,
+            top: `${dot.y}%`,
+          }}
+          animate={{ y: [0, -50, 0], opacity: [0.1, 0.45, 0.1] }}
+          transition={{ duration: dot.duration, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
+
+      {/* Breathing ambient glow — top-right */}
+      <motion.div
+        animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.24, 0.1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[-10%] right-[-5%] w-[440px] h-[440px] rounded-full bg-white/10 blur-[120px] pointer-events-none z-0"
+      />
+      {/* Secondary glow — bottom-left */}
+      <motion.div
+        animate={{ scale: [1, 1.1, 1], opacity: [0.06, 0.16, 0.06] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 6 }}
+        className="absolute bottom-[-10%] left-[-5%] w-[360px] h-[360px] rounded-full bg-white/8 blur-[100px] pointer-events-none z-0"
+      />
+
+      <div className="max-w-7xl mx-auto w-full py-28 flex flex-col gap-16 relative z-10">
+
+        {/* ── Section Header (centered) ── */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          className="flex flex-col items-center text-center space-y-4"
         >
-          <div className="space-y-3">
-            <p className="text-[10px] tracking-[0.25em] font-mono text-neutral-500 uppercase">
-              ✦ &nbsp; WHAT WE DELIVER
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
-              Our <span className="font-light text-neutral-400">Services.</span>
-            </h2>
-          </div>
-          <p className="text-neutral-500 text-sm leading-relaxed max-w-xs sm:text-right">
-            Tailored digital craftsmanship. Click any card to explore deliverables and rates.
-          </p>
+          <motion.p
+            variants={itemVariants}
+            className="text-[10px] tracking-[0.2em] font-mono text-neutral-500 uppercase flex items-center gap-2"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            What We Deliver
+          </motion.p>
+
+          <motion.h2
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08]"
+          >
+            Our{" "}
+            <span className="font-light text-neutral-400 text-glow">
+              Services.
+            </span>
+          </motion.h2>
+
+          <motion.p
+            variants={itemVariants}
+            className="text-neutral-500 text-sm leading-relaxed max-w-lg"
+          >
+            Tailored digital craftsmanship — click any card to explore deliverables and rates.
+          </motion.p>
         </motion.div>
 
-        {/* Services Grid */}
+        {/* ── Services Grid ── */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -250,45 +313,58 @@ export default function Services() {
           viewport={{ once: true, amount: 0.1 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         >
-          {servicesList.map((svc) => {
+          {servicesList.map((svc, idx) => {
             const Icon = svc.icon;
             return (
               <motion.div
                 key={svc.id}
                 variants={itemVariants}
                 onClick={() => setSelectedService(serviceDetailsData[svc.id] || null)}
-                whileHover={{ y: -4 }}
+                whileHover={{ y: -3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className={`group relative p-6 rounded-2xl border border-neutral-800/70 bg-gradient-to-br ${svc.accent} hover:border-neutral-700 transition-colors duration-300 flex flex-col gap-5 cursor-pointer overflow-hidden`}
+                className="group relative rounded-2xl border border-neutral-900 bg-neutral-950/20 hover:bg-neutral-950/50 hover:border-neutral-800 transition-all duration-300 flex flex-col cursor-pointer overflow-hidden"
               >
-                {/* Background grid pattern */}
-                <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+                {/* Left accent bar */}
+                <div className={`absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b ${svc.accent.replace("/10", "/60").replace("/5", "/30")} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
 
-                {/* Top row: icon + price */}
-                <div className="flex items-start justify-between">
-                  <AnimatedIcon Icon={Icon} iconColor={svc.iconColor} />
-                  <span className="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300 transition-colors uppercase tracking-widest bg-neutral-900/60 px-2 py-1 rounded-md border border-neutral-800">
-                    {svc.price}
+                {/* Top: number + icon circle */}
+                <div className="flex items-center justify-between px-6 pt-6 pb-5">
+                  <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-neutral-700 group-hover:text-neutral-500 transition-colors duration-300">
+                    {String(idx + 1).padStart(2, "0")}
                   </span>
+                  <div className={`w-9 h-9 rounded-full border border-neutral-800 bg-neutral-950 flex items-center justify-center ${svc.iconColor} group-hover:border-neutral-600 transition-all duration-300`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
                 </div>
 
-                {/* Service name */}
-                <div>
-                  <h3 className="text-base font-bold text-white tracking-tight mb-1.5 flex items-center gap-1.5">
-                    {svc.name}
-                    <ArrowUpRight className="w-3.5 h-3.5 text-neutral-600 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
-                  </h3>
-                  <p className="text-xs text-neutral-500 leading-relaxed group-hover:text-neutral-400 transition-colors">
+                {/* Divider */}
+                <div className="mx-6 border-t border-neutral-900 group-hover:border-neutral-800 transition-colors duration-300" />
+
+                {/* Content */}
+                <div className="px-6 pt-5 pb-5 flex flex-col gap-2 flex-1">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-base font-semibold text-white tracking-tight leading-snug">
+                      {svc.name}
+                    </h3>
+                    <ArrowUpRight className={`w-4 h-4 shrink-0 mt-0.5 ${svc.iconColor} opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200`} />
+                  </div>
+                  <p className="text-xs text-neutral-600 group-hover:text-neutral-400 leading-relaxed transition-colors duration-300">
                     {svc.desc}
                   </p>
                 </div>
 
-                {/* Bottom CTA hint */}
-                <div className="mt-auto pt-3 border-t border-neutral-800/50">
-                  <span className="text-[10px] font-mono text-neutral-600 group-hover:text-neutral-400 transition-colors tracking-wider uppercase">
+                {/* Footer: price + cta */}
+                <div className="px-6 pb-6 flex items-center justify-between">
+                  <span className={`text-[10px] font-mono font-bold tracking-wider ${svc.iconColor} opacity-60 group-hover:opacity-100 transition-opacity duration-300`}>
+                    {svc.price}
+                  </span>
+                  <span className="text-[10px] font-mono text-neutral-700 group-hover:text-neutral-400 transition-colors tracking-wider uppercase">
                     View details →
                   </span>
                 </div>
+
+                {/* Bottom accent line — slides in on hover */}
+                <div className="absolute bottom-0 left-0 h-[1.5px] w-0 group-hover:w-full bg-gradient-to-r from-transparent via-neutral-500 to-transparent transition-all duration-500 ease-out" />
               </motion.div>
             );
           })}
