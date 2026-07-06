@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, Variants } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Sparkles, BarChart, ShoppingCart, MessageSquare, Heart, LayoutGrid, Utensils, CheckCircle } from "lucide-react";
 import Modal from "./ui/Modal";
 
@@ -18,6 +18,7 @@ interface PortfolioItem {
   description: string;
   metrics: ProjectMetric[];
   icon: React.ComponentType<{ className?: string }>;
+  image: string;
 }
 
 interface PortfolioDetail {
@@ -30,6 +31,7 @@ interface PortfolioDetail {
   results: ProjectMetric[];
   techStack?: string[];
   features?: string[];
+  image: string;
 }
 
 const portfolioList: PortfolioItem[] = [
@@ -39,6 +41,7 @@ const portfolioList: PortfolioItem[] = [
     title: "Luxury Fashion Brand",
     description: "Complete digital marketing overhaul for an Italian luxury brand. Increased organic search engine traffic by 250% in 6 months.",
     icon: Heart,
+    image: "/images/luxury-fashion.png",
     metrics: [
       { value: "+250%", label: "Traffic Growth" },
       { value: "3.2x", label: "ROI Increase" },
@@ -50,6 +53,7 @@ const portfolioList: PortfolioItem[] = [
     title: "E-Commerce Platform",
     description: "Full-stack ecommerce platform for premium Italian artisan products. Integrated Stripe checkout, caching, and CDN.",
     icon: ShoppingCart,
+    image: "/images/ecommerce.png",
     metrics: [
       { value: "98/100", label: "PageSpeed Score" },
       { value: "1.2M", label: "Users / Month" },
@@ -61,20 +65,10 @@ const portfolioList: PortfolioItem[] = [
     title: "Smart Customer Bot",
     description: "AI support agent built using Claude API for 24/7 client care. Automatically answers 80% of customer questions.",
     icon: MessageSquare,
+    image: "/images/chatbot.png",
     metrics: [
       { value: "-60%", label: "Support Cost" },
       { value: "4.8/5", label: "Client Rating" },
-    ],
-  },
-  {
-    id: "beauty-campaign",
-    tag: "Social Media",
-    title: "Beauty Brand Campaign",
-    description: "Multi-platform growth campaign across Instagram, TikTok, and LinkedIn. Raised follower counts from 10K to 150K.",
-    icon: Sparkles,
-    metrics: [
-      { value: "15x", label: "Follower Growth" },
-      { value: "8.5%", label: "Engagement Rate" },
     ],
   },
   {
@@ -83,9 +77,22 @@ const portfolioList: PortfolioItem[] = [
     title: "SaaS Dashboard",
     description: "Complex real-time time-series analytics dashboard. Serves active corporate clients with sub-200ms query latency.",
     icon: LayoutGrid,
+    image: "/images/saas-dashboard.png",
     metrics: [
       { value: "99.9%", label: "Uptime SLA" },
       { value: "50K+", label: "Active Users" },
+    ],
+  },
+  {
+    id: "beauty-campaign",
+    tag: "Social Media",
+    title: "Beauty Brand Campaign",
+    description: "Multi-platform growth campaign across Instagram, TikTok, and LinkedIn. Raised follower counts from 10K to 150K.",
+    icon: Sparkles,
+    image: "/images/beauty-campaign.png",
+    metrics: [
+      { value: "15x", label: "Follower Growth" },
+      { value: "8.5%", label: "Engagement Rate" },
     ],
   },
   {
@@ -94,6 +101,7 @@ const portfolioList: PortfolioItem[] = [
     title: "Restaurant Brand Launch",
     description: "Complete localized Venice branding, food video, and local search optimization campaign. Tripled reservation velocity.",
     icon: Utensils,
+    image: "/images/restaurant.png",
     metrics: [
       { value: "3x", label: "Reservations" },
       { value: "92%", label: "Rating Score" },
@@ -106,6 +114,7 @@ const portfolioDetailsData: Record<string, PortfolioDetail> = {
     id: "luxury-fashion",
     tag: "Digital Marketing",
     title: "Luxury Fashion Brand - Digital Transformation",
+    image: "/images/luxury-fashion.png",
     overview: "Complete digital marketing overhaul for an Italian luxury fashion house targeting international markets. The client needed to establish digital authority and scale premium ecommerce conversions.",
     strategyHeading: "Strategy & Tactical Execution",
     strategyItems: [
@@ -126,6 +135,7 @@ const portfolioDetailsData: Record<string, PortfolioDetail> = {
     id: "ecommerce",
     tag: "Web Development",
     title: "Premium E-Commerce Platform",
+    image: "/images/ecommerce.png",
     overview: "Full-stack e-commerce platform for premium Italian artisan products. Engineered with modular React logic and serverless database integration to handle heavy checkouts with minimal delay.",
     strategyHeading: "Technical Deliverables",
     techStack: ["Next.js (App Router)", "React", "TypeScript", "Tailwind CSS", "Node.js", "PostgreSQL", "Stripe", "Vercel Edge"],
@@ -152,6 +162,7 @@ const portfolioDetailsData: Record<string, PortfolioDetail> = {
     id: "chatbot",
     tag: "AI Services",
     title: "AI-Powered Customer Support Agent",
+    image: "/images/chatbot.png",
     overview: "Designed and engineered an automated chatbot using Claude API for 24/7 client operations. The bot processes structured help queues, freeing up staff and raising customer feedback scores.",
     strategyHeading: "Core System Capabilities",
     features: [
@@ -173,30 +184,11 @@ const portfolioDetailsData: Record<string, PortfolioDetail> = {
       { value: "< 2 min", label: "Average response time" },
     ],
   },
-  "beauty-campaign": {
-    id: "beauty-campaign",
-    tag: "Social Media",
-    title: "Beauty Brand Growth Campaign",
-    overview: "Unified visual content design and distribution campaign for a beauty brand across Instagram, TikTok, and LinkedIn. Raised engagement metrics and drove social store referrals.",
-    strategyHeading: "Social Strategies",
-    strategyItems: [
-      "High-contrast product animations tailored for TikTok reels.",
-      "Micro-influencer PR mailings and content amplification.",
-      "Prompt response structures raising profile weights.",
-      "Faceted educational copy describing clean skin values.",
-      "Weekly analytics review mapping content performance.",
-    ],
-    results: [
-      { value: "15x", label: "Audience follower scale" },
-      { value: "8.5%", label: "Average engagement rate" },
-      { value: "150K", label: "Total active audience" },
-      { value: "€850K", label: "Direct referral transactions" },
-    ],
-  },
   "saas-dashboard": {
     id: "saas-dashboard",
     tag: "Web Development",
     title: "Enterprise Analytics SaaS Dashboard",
+    image: "/images/saas-dashboard.png",
     overview: "A complex analytics dashboard visualizing heavy time-series client datasets. Renders high-frequency query updates with responsive rendering speeds.",
     strategyHeading: "Software Architecture",
     techStack: ["React", "TypeScript", "D3.js Visualization", "Node.js (Express)", "PostgreSQL (TimescaleDB)", "Redis Cache", "AWS Serverless"],
@@ -219,10 +211,32 @@ const portfolioDetailsData: Record<string, PortfolioDetail> = {
       { value: "1B+", label: "Monthly data feeds tracked" },
     ],
   },
+  "beauty-campaign": {
+    id: "beauty-campaign",
+    tag: "Social Media",
+    title: "Beauty Brand Growth Campaign",
+    image: "/images/beauty-campaign.png",
+    overview: "Unified visual content design and distribution campaign for a beauty brand across Instagram, TikTok, and LinkedIn. Raised engagement metrics and drove social store referrals.",
+    strategyHeading: "Social Strategies",
+    strategyItems: [
+      "High-contrast product animations tailored for TikTok reels.",
+      "Micro-influencer PR mailings and content amplification.",
+      "Prompt response structures raising profile weights.",
+      "Faceted educational copy describing clean skin values.",
+      "Weekly analytics review mapping content performance.",
+    ],
+    results: [
+      { value: "15x", label: "Audience follower scale" },
+      { value: "8.5%", label: "Average engagement rate" },
+      { value: "150K", label: "Total active audience" },
+      { value: "€850K", label: "Direct referral transactions" },
+    ],
+  },
   restaurant: {
     id: "restaurant",
     tag: "Full Service",
     title: "Fine Dining Restaurant Venice Launch",
+    image: "/images/restaurant.png",
     overview: "Complete identity redesign, localization, and launch campaign for a fine dining spot in Mestre/Venice. Merged sensory offline photography with optimized local SEO listings.",
     strategyHeading: "Scope of Work",
     strategyItems: [
@@ -243,6 +257,18 @@ const portfolioDetailsData: Record<string, PortfolioDetail> = {
 
 export default function Portfolio() {
   const [selectedProject, setSelectedProject] = useState<PortfolioDetail | null>(null);
+  const [dots, setDots] = useState<{ id: number; size: number; x: number; y: number; duration: number }[]>([]);
+
+  useEffect(() => {
+    const generated = [...Array(14)].map((_, i) => ({
+      id: i,
+      size: Math.random() * 2 + 1,
+      x: Math.random() * 90 + 5,
+      y: Math.random() * 90 + 5,
+      duration: 12 + Math.random() * 10,
+    }));
+    setDots(generated);
+  }, []);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -273,24 +299,67 @@ export default function Portfolio() {
   return (
     <section
       id="portfolio"
-      className="scroll-section px-6 md:px-12 py-24 z-10 w-full overflow-hidden border-t border-neutral-950 bg-[#050505]"
+      className="scroll-section relative px-6 md:px-12 py-28 z-10 w-full overflow-hidden border-t border-neutral-900 bg-[#050505]"
     >
-      <div className="max-w-7xl mx-auto w-full flex flex-col justify-between my-auto">
-        {/* Header */}
-        <div className="text-left max-w-xl space-y-4 mb-14">
-          <p className="text-[10px] tracking-[0.2em] font-mono text-neutral-500 uppercase flex items-center gap-2">
-            <BarChart className="w-3.5 h-3.5" />
-            CASE STUDIES
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
-            Featured <span className="font-light text-neutral-400 text-glow">Projects.</span>
-          </h2>
-          <p className="text-neutral-400 text-sm leading-relaxed">
-            Real outcomes. Selected stories showing how we help brands scale online platforms and launch systems.
-          </p>
-        </div>
+      {/* Drifting background dots */}
+      {dots.map((dot) => (
+        <motion.div
+          key={dot.id}
+          className="absolute rounded-full bg-white pointer-events-none z-0"
+          style={{ width: dot.size, height: dot.size, left: `${dot.x}%`, top: `${dot.y}%` }}
+          animate={{ y: [0, -50, 0], opacity: [0.1, 0.45, 0.1] }}
+          transition={{ duration: dot.duration, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
 
-        {/* Portfolio Grid */}
+      {/* Breathing glow — top-right */}
+      <motion.div
+        animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.24, 0.1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[-10%] right-[-5%] w-[440px] h-[440px] rounded-full bg-white/10 blur-[120px] pointer-events-none z-0"
+      />
+      {/* Secondary glow — bottom-left */}
+      <motion.div
+        animate={{ scale: [1, 1.1, 1], opacity: [0.06, 0.16, 0.06] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 6 }}
+        className="absolute bottom-[-10%] left-[-5%] w-[360px] h-[360px] rounded-full bg-white/8 blur-[100px] pointer-events-none z-0"
+      />
+
+      <div className="max-w-7xl mx-auto w-full flex flex-col gap-16 relative z-10">
+        
+        {/* ── Section Header (centered) ── */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          className="flex flex-col items-center text-center space-y-4"
+        >
+          <motion.p
+            variants={itemVariants}
+            className="text-[10px] tracking-[0.2em] font-mono text-neutral-500 uppercase flex items-center gap-2"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            Case Studies
+          </motion.p>
+          <motion.h2
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08]"
+          >
+            Featured{" "}
+            <span className="font-light text-neutral-400 text-glow">
+              Projects.
+            </span>
+          </motion.h2>
+          <motion.p
+            variants={itemVariants}
+            className="text-neutral-500 text-sm leading-relaxed max-w-lg"
+          >
+            Real outcomes. Selected stories showing how we help brands scale online platforms and launch systems.
+          </motion.p>
+        </motion.div>
+
+        {/* ── Portfolio Grid ── */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -305,41 +374,53 @@ export default function Portfolio() {
                 key={project.id}
                 variants={itemVariants}
                 onClick={() => handleOpenProject(project.id)}
-                className="group rounded-2xl border border-neutral-900 bg-neutral-950/20 hover:bg-neutral-950/60 hover:border-neutral-800 transition-all duration-300 flex flex-col text-left overflow-hidden cursor-pointer glow-sm"
+                className="group relative rounded-2xl border border-neutral-900 bg-neutral-950/20 hover:bg-neutral-950/50 hover:border-neutral-800 transition-all duration-300 flex flex-col overflow-hidden cursor-pointer"
               >
-                {/* Visual Icon Header */}
-                <div className="p-6 border-b border-neutral-900/60 bg-neutral-950/40 flex justify-between items-center">
-                  <span className="text-[9px] font-mono tracking-widest text-neutral-500 uppercase">
-                    {project.tag}
-                  </span>
-                  <div className="p-1.5 rounded-lg border border-neutral-900 bg-neutral-950 text-neutral-500 group-hover:text-white transition-colors duration-300">
-                    <Icon className="w-4 h-4" />
+                {/* Image Preview Area */}
+                <div className="relative w-full aspect-[16/10] overflow-hidden border-b border-neutral-900">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
+                  />
+                  {/* Glass Overlay Tag */}
+                  <div className="absolute top-4 left-4 px-2.5 py-1 rounded bg-neutral-950/75 border border-neutral-800 backdrop-blur-md">
+                    <span className="text-[8px] font-mono font-bold tracking-widest text-neutral-400 uppercase">
+                      {project.tag}
+                    </span>
+                  </div>
+                  {/* Category icon */}
+                  <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-neutral-950/75 border border-neutral-800 backdrop-blur-md flex items-center justify-center text-neutral-500 group-hover:text-white transition-colors duration-300">
+                    <Icon className="w-3.5 h-3.5" />
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-1">
-                  <h3 className="text-base font-bold text-white tracking-tight mb-2 group-hover:text-glow">
+                  <h3 className="text-base font-semibold text-white tracking-tight mb-2 leading-snug group-hover:text-glow transition-all duration-300">
                     {project.title}
                   </h3>
-                  <p className="text-xs text-neutral-500 leading-normal line-clamp-3 mb-6">
+                  <p className="text-xs text-neutral-600 group-hover:text-neutral-400 leading-relaxed line-clamp-3 mb-6 transition-colors duration-300">
                     {project.description}
                   </p>
 
                   {/* Metrics Row */}
-                  <div className="mt-auto pt-4 border-t border-neutral-900/60 grid grid-cols-2 gap-4">
+                  <div className="mt-auto pt-4 border-t border-neutral-900 grid grid-cols-2 gap-4">
                     {project.metrics.map((metric, idx) => (
                       <div key={idx} className="text-left">
                         <span className="text-sm font-bold text-white tracking-tight">
                           {metric.value}
                         </span>
-                        <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-wider">
+                        <p className="text-[9px] font-mono text-neutral-600 uppercase tracking-wider mt-0.5">
                           {metric.label}
                         </p>
                       </div>
                     ))}
                   </div>
                 </div>
+
+                {/* Bottom slide-in accent line */}
+                <div className="absolute bottom-0 left-0 h-[1.5px] w-0 group-hover:w-full bg-gradient-to-r from-transparent via-neutral-500 to-transparent transition-all duration-500 ease-out" />
               </motion.div>
             );
           })}
@@ -355,7 +436,17 @@ export default function Portfolio() {
       >
         {selectedProject && (
           <div className="space-y-6">
-            <p className="text-sm text-neutral-400 leading-relaxed">
+            
+            {/* Modal Hero Image */}
+            <div className="w-full aspect-[16/9] rounded-xl overflow-hidden border border-neutral-900">
+              <img
+                src={selectedProject.image}
+                alt={selectedProject.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <p className="text-sm text-neutral-400 leading-relaxed text-left">
               {selectedProject.overview}
             </p>
 
@@ -435,7 +526,7 @@ export default function Portfolio() {
             <div className="border-t border-neutral-900 pt-5 text-left flex justify-end">
               <button
                 onClick={handleCloseProject}
-                className="px-5 py-2.5 border border-neutral-850 hover:bg-neutral-900 transition-colors text-xs font-semibold uppercase tracking-wider rounded-lg text-white"
+                className="px-5 py-2.5 border border-neutral-850 hover:bg-neutral-900 transition-colors text-xs font-semibold uppercase tracking-wider rounded-lg text-white cursor-pointer"
               >
                 Close Project Case
               </button>
