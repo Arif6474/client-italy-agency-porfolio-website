@@ -139,16 +139,16 @@ export default function Contact() {
         >
 
           {/* Left: Info cards */}
-          <motion.div variants={itemVariants} className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+          <motion.div variants={itemVariants} className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {infoCards.map(({ num, icon: Icon, label, content, copyValue }) => (
               <div
                 key={num}
                 onClick={() => handleCardClick(copyValue, label)}
-                className={`group relative p-[1px] rounded-2xl overflow-hidden ${copyValue ? "cursor-pointer" : ""}`}
+                className={`group relative p-[1px] rounded-2xl overflow-hidden h-full ${copyValue ? "cursor-pointer" : ""}`}
               >
                 {/* Conic border beam on hover (static glow gradient instead of spinning animation) */}
                 {/* <div className="absolute inset-[-200%] bg-[conic-gradient(from_0deg,transparent_60%,#06b6d4_88%,#06b6d4_100%)] opacity-0 group-hover:opacity-20 transition-opacity duration-500" /> */}
-                <div className="relative rounded-[15px] bg-neutral-950/20 group-hover:bg-neutral-950/50 border border-neutral-900 group-hover:border-neutral-800 transition-all duration-300 flex flex-col overflow-hidden">
+                <div className="relative h-full rounded-[15px] bg-neutral-950/20 group-hover:bg-neutral-950/50 border border-neutral-900 group-hover:border-neutral-800 transition-all duration-300 flex flex-col overflow-hidden">
                   {/* Top bar */}
                   <div className="flex items-center justify-between px-5 pt-4 pb-3">
                     <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-neutral-700 group-hover:text-neutral-500 transition-colors duration-300">
@@ -171,9 +171,11 @@ export default function Contact() {
                     </div>
                   </div>
                   <div className="mx-5 border-t border-neutral-900 group-hover:border-neutral-800 transition-colors duration-300" />
-                  <div className="px-5 pt-3 pb-4">
-                    <h4 className="text-xs font-semibold text-white tracking-tight mb-1">{label}</h4>
-                    <p className="text-[11px] text-neutral-600 group-hover:text-neutral-400 leading-relaxed transition-colors duration-300">{content}</p>
+                  <div className="px-5 pt-3 pb-4 flex-grow flex flex-col justify-between">
+                    <div>
+                      <h4 className="text-xs font-semibold text-white tracking-tight mb-1">{label}</h4>
+                      <p className="text-[11px] text-neutral-600 group-hover:text-neutral-400 leading-relaxed transition-colors duration-300">{content}</p>
+                    </div>
                   </div>
                   {/* Slide-in bottom accent line */}
                   <div className="absolute bottom-0 left-0 h-[1.5px] w-0 group-hover:w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent transition-all duration-500 ease-out" />
@@ -183,7 +185,7 @@ export default function Contact() {
           </motion.div>
 
           {/* Right: Form panel */}
-          <motion.div variants={itemVariants} className="lg:col-span-8 w-full">
+          <motion.div variants={itemVariants} className="lg:col-span-7 w-full">
             <div className="relative rounded-2xl bg-neutral-950/65 p-7 md:p-9 border border-neutral-900 hover:border-neutral-800 transition-colors duration-300">
 
                 <AnimatePresence mode="wait">

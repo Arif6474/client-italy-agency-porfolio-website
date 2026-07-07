@@ -110,7 +110,7 @@ export default function Hero() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
             </span>
-            <span className="text-neutral-400 uppercase tracking-widest truncate">HURRY! ONLY FEW SPOTS LEFT</span>
+            <span className="text-neutral-400 uppercase tracking-widest truncate">Currently selecting startup cohorts</span>
           </div>
         </motion.div>
 
@@ -119,16 +119,16 @@ export default function Hero() {
           variants={itemVariants}
           className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1] max-w-3xl w-full"
         >
-          Experience Top-Tier Designs with <span className="font-light text-neutral-400 text-glow">StudioWebDigital</span>
+          Premium Digital Excellence <span className="font-light text-neutral-500 text-glow">StudioWebDigital</span>
         </motion.h1>
 
         {/* Subtitle */}
         <motion.p
           variants={itemVariants}
-          className="text-xs sm:text-sm md:text-base text-neutral-500 max-w-xl leading-relaxed w-full"
+          className="text-xs sm:text-sm md:text-base text-neutral-500 max-w-2xl leading-relaxed w-full"
         >
-          Get high-quality, customized designs whenever you need them. <br className="hidden sm:inline" />
-          Transforming ideas into stunning digital products with Italian elegance.
+          Crafting high-performance digital products, smart interfaces, and ROI-driven marketing systems 
+          with Venetian precision and Italian craftsmanship.
         </motion.p>
 
         {/* Animated Action Button */}
