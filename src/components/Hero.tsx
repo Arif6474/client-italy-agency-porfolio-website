@@ -119,7 +119,8 @@ export default function Hero() {
           variants={itemVariants}
           className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1] max-w-3xl w-full"
         >
-          Premium Digital Excellence <span className="font-light text-neutral-500 text-glow">Aether Genio</span>
+          Premium Digital Excellence <br />
+          <span className="font-light text-neutral-500 text-glow">Aether Genio</span>
         </motion.h1>
 
         {/* Subtitle */}
