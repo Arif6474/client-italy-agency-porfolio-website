@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, AnimatePresence } from "framer-motion";
 import {
   LineChart,
   Laptop,
@@ -15,8 +15,63 @@ import {
   CheckCircle,
   ArrowUpRight,
   Sparkles,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 import Modal from "./ui/Modal";
+
+const colorThemes: Record<string, { borderGlow: string; spotlightColor: string; iconGlowClass: string }> = {
+  "text-blue-400": {
+    borderGlow: "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(96,165,250,0.25),transparent_80%)]",
+    spotlightColor: "rgba(96, 165, 250, 0.04)",
+    iconGlowClass: "text-blue-400 border-blue-950/20 bg-blue-950/10 group-hover:border-blue-500/60 drop-shadow-[0_0_8px_rgba(96,165,250,0.35)]"
+  },
+  "text-violet-400": {
+    borderGlow: "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(167,139,250,0.25),transparent_80%)]",
+    spotlightColor: "rgba(167, 139, 250, 0.04)",
+    iconGlowClass: "text-violet-400 border-violet-950/20 bg-violet-950/10 group-hover:border-violet-500/60 drop-shadow-[0_0_8px_rgba(167,139,250,0.35)]"
+  },
+  "text-emerald-400": {
+    borderGlow: "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(52,211,153,0.25),transparent_80%)]",
+    spotlightColor: "rgba(52, 211, 153, 0.04)",
+    iconGlowClass: "text-emerald-400 border-emerald-950/20 bg-emerald-950/10 group-hover:border-emerald-500/60 drop-shadow-[0_0_8px_rgba(52,211,153,0.35)]"
+  },
+  "text-pink-400": {
+    borderGlow: "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(244,114,182,0.25),transparent_80%)]",
+    spotlightColor: "rgba(244, 114, 182, 0.04)",
+    iconGlowClass: "text-pink-400 border-pink-950/20 bg-pink-950/10 group-hover:border-pink-500/60 drop-shadow-[0_0_8px_rgba(244,114,182,0.35)]"
+  },
+  "text-rose-400": {
+    borderGlow: "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(251,113,133,0.25),transparent_80%)]",
+    spotlightColor: "rgba(251, 113, 133, 0.04)",
+    iconGlowClass: "text-rose-400 border-rose-950/20 bg-rose-950/10 group-hover:border-rose-500/60 drop-shadow-[0_0_8px_rgba(251,113,133,0.35)]"
+  },
+  "text-cyan-400": {
+    borderGlow: "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(34,211,238,0.25),transparent_80%)]",
+    spotlightColor: "rgba(34, 211, 238, 0.04)",
+    iconGlowClass: "text-cyan-400 border-cyan-950/20 bg-cyan-950/10 group-hover:border-cyan-500/60 drop-shadow-[0_0_8px_rgba(34,211,238,0.35)]"
+  }
+};
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 300 : -300,
+    opacity: 0
+  }),
+  center: {
+    x: 0,
+    opacity: 1
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? 300 : -300,
+    opacity: 0
+  })
+};
+
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
 
 interface BgDot {
   id: number;
@@ -182,41 +237,31 @@ const servicesList = [
   { id: "headless-ecommerce", name: "Headless E-Commerce", price: "Custom", icon: ShoppingBag, desc: "Lightning-fast decoupled storefronts built on Shopify, BigCommerce, or custom APIs.", accent: "from-emerald-500/10 to-teal-500/5", iconColor: "text-emerald-400" },
 ];
 
-// Animated Icon component
-function AnimatedIcon({ Icon, iconColor }: { Icon: React.ElementType; iconColor: string }) {
-  return (
-    <motion.div
-      className="relative flex items-center justify-center"
-      whileHover="hover"
-      initial="rest"
-    >
-      {/* Pulsing ring */}
-      <motion.span
-        variants={{
-          rest: { scale: 1, opacity: 0 },
-          hover: { scale: 1.6, opacity: 0.15 },
-        }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className={`absolute w-14 h-14 rounded-full bg-current ${iconColor} blur-md`}
-      />
-      {/* Icon itself */}
-      <motion.div
-        variants={{
-          rest: { scale: 1, rotate: 0 },
-          hover: { scale: 1.18, rotate: -6 },
-        }}
-        transition={{ type: "spring", stiffness: 260, damping: 18 }}
-        className={`relative w-12 h-12 rounded-2xl flex items-center justify-center bg-neutral-900 border border-neutral-800 ${iconColor} shadow-lg`}
-      >
-        <Icon className="w-6 h-6" />
-      </motion.div>
-    </motion.div>
-  );
-}
 
 export default function Services() {
   const [selectedService, setSelectedService] = useState<ServiceDetail | null>(null);
   const [dots, setDots] = useState<BgDot[]>([]);
+  const [activeMobileIdx, setActiveMobileIdx] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const handleNext = () => {
+    setDirection(1);
+    setActiveMobileIdx((prev) => (prev + 1) % servicesList.length);
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setActiveMobileIdx((prev) => (prev - 1 + servicesList.length) % servicesList.length);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { currentTarget, clientX, clientY } = e;
+    const rect = currentTarget.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
 
   useEffect(() => {
     const generated = [...Array(14)].map((_, i) => ({
@@ -226,7 +271,12 @@ export default function Services() {
       y: Math.random() * 90 + 5,
       duration: 12 + Math.random() * 10,
     }));
-    setDots(generated);
+    
+    const handle = requestAnimationFrame(() => {
+      setDots(generated);
+    });
+
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   const containerVariants: Variants = {
@@ -244,6 +294,23 @@ export default function Services() {
       id="services"
       className="scroll-section relative px-5 sm:px-8 md:px-12 z-10 w-full overflow-hidden border-t border-neutral-900 bg-[#050505]"
     >
+      {/* Precision Grid Brackets & Viewport Borders */}
+      <div className="absolute top-6 left-6 w-5 h-5 border-t border-l border-neutral-900 pointer-events-none select-none opacity-50" />
+      <div className="absolute top-6 right-6 w-5 h-5 border-t border-r border-neutral-900 pointer-events-none select-none opacity-50" />
+      <div className="absolute bottom-6 left-6 w-5 h-5 border-b border-l border-neutral-900 pointer-events-none select-none opacity-50" />
+      <div className="absolute bottom-6 right-6 w-5 h-5 border-b border-r border-neutral-900 pointer-events-none select-none opacity-50" />
+
+      {/* Subtle Horizontal Layout Alignment Line */}
+      <div className="absolute top-[12vh] left-6 right-6 border-b border-dashed border-neutral-900/30 pointer-events-none z-0" />
+
+      {/* Monospace Editorial & Coordinate Info */}
+      <div className="absolute top-8 left-14 hidden md:flex items-center gap-1.5 pointer-events-none select-none opacity-20 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500">
+        <span>Vantelli Services Matrix</span>
+      </div>
+      <div className="absolute top-8 right-14 hidden md:flex items-center gap-1.5 pointer-events-none select-none opacity-20 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500">
+        <span>SYS CODE: V-SERVICE.9</span>
+      </div>
+
       {/* Drifting background dots */}
       {dots.map((dot) => (
         <motion.div
@@ -296,7 +363,7 @@ export default function Services() {
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08]"
           >
             Our{" "}
-            <span className="font-light text-neutral-400 text-glow">
+            <span className="font-semibold bg-gradient-to-r from-amber-200 via-yellow-100 to-rose-200 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.06)]">
               Services.
             </span>
           </motion.h2>
@@ -309,70 +376,180 @@ export default function Services() {
           </motion.p>
         </motion.div>
 
-        {/* ── Services Grid ── */}
+        {/* ── Services Grid (Desktop Viewports) ── */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           {servicesList.map((svc, idx) => {
             const Icon = svc.icon;
+            const theme = colorThemes[svc.iconColor];
             return (
               <motion.div
                 key={svc.id}
                 variants={itemVariants}
                 onClick={() => setSelectedService(serviceDetailsData[svc.id] || null)}
+                onMouseMove={handleMouseMove}
                 whileHover={{ y: -3 }}
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className="group relative rounded-2xl border border-neutral-900 bg-neutral-950/20 hover:bg-neutral-950/50 hover:border-neutral-800 transition-all duration-300 flex flex-col cursor-pointer overflow-hidden"
+                className="group relative rounded-2xl p-[1px] bg-neutral-900 transition-colors duration-300 overflow-hidden cursor-pointer"
               >
-                {/* Left accent bar */}
-                <div className={`absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b ${svc.accent.replace("/10", "/60").replace("/5", "/30")} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                {/* Border follow spotlight */}
+                <div className={`absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100 pointer-events-none z-0 ${theme.borderGlow}`} />
 
-                {/* Top: number + icon circle */}
-                <div className="flex items-center justify-between px-6 pt-6 pb-5">
-                  <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-neutral-700 group-hover:text-neutral-500 transition-colors duration-300">
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                  <div className={`w-9 h-9 rounded-full border border-neutral-800 bg-neutral-950 flex items-center justify-center ${svc.iconColor} group-hover:border-neutral-600 transition-all duration-300`}>
-                    <Icon className="w-4 h-4" />
+                {/* Card body */}
+                <div 
+                  className="relative rounded-[15px] bg-[#070707]/90 hover:bg-[#070707]/95 border border-neutral-900/40 group-hover:border-neutral-800/30 transition-all duration-300 flex flex-col justify-between overflow-hidden z-10 h-full min-h-[220px]"
+                  style={{
+                    backgroundImage: `radial-gradient(350px circle at var(--mouse-x, -400px) var(--mouse-y, -400px), ${theme.spotlightColor}, transparent 80%)`
+                  }}
+                >
+                  {/* Top: number + icon circle */}
+                  <div className="flex items-center justify-between px-6 pt-6 pb-5">
+                    <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-neutral-700 group-hover:text-neutral-500 transition-colors duration-300">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <div className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-500 ${theme.iconGlowClass}`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
                   </div>
-                </div>
 
-                {/* Divider */}
-                <div className="mx-6 border-t border-neutral-900 group-hover:border-neutral-800 transition-colors duration-300" />
+                  {/* Divider */}
+                  <div className="mx-6 border-t border-neutral-900 group-hover:border-neutral-800 transition-colors duration-300" />
 
-                {/* Content */}
-                <div className="px-6 pt-5 pb-5 flex flex-col gap-2 flex-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-base font-semibold text-white tracking-tight leading-snug">
-                      {svc.name}
-                    </h3>
-                    <ArrowUpRight className={`w-4 h-4 shrink-0 mt-0.5 ${svc.iconColor} opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200`} />
+                  {/* Content */}
+                  <div className="px-6 pt-5 pb-5 flex flex-col gap-2 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-base font-semibold text-white tracking-tight leading-snug">
+                        {svc.name}
+                      </h3>
+                      <ArrowUpRight className={`w-4 h-4 shrink-0 mt-0.5 ${svc.iconColor} opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200`} />
+                    </div>
+                    <p className="text-xs text-neutral-600 group-hover:text-neutral-400 leading-relaxed transition-colors duration-300">
+                      {svc.desc}
+                    </p>
                   </div>
-                  <p className="text-xs text-neutral-600 group-hover:text-neutral-400 leading-relaxed transition-colors duration-300">
-                    {svc.desc}
-                  </p>
-                </div>
 
-                {/* Footer: price + cta */}
-                <div className="px-6 pb-6 flex items-center justify-between">
-                  <span className={`text-[10px] font-mono font-bold tracking-wider ${svc.iconColor} opacity-60 group-hover:opacity-100 transition-opacity duration-300`}>
-                    {svc.price}
-                  </span>
-                  <span className="text-[10px] font-mono text-neutral-700 group-hover:text-neutral-400 transition-colors tracking-wider uppercase">
-                    View details →
-                  </span>
-                </div>
+                  {/* Footer: price + cta */}
+                  <div className="px-6 pb-6 flex items-center justify-between mt-auto">
+                    <span className={`text-[10px] font-mono font-bold tracking-wider ${svc.iconColor} opacity-60 group-hover:opacity-100 transition-opacity duration-300`}>
+                      {svc.price}
+                    </span>
+                    <span className="text-[10px] font-mono text-neutral-700 group-hover:text-neutral-400 transition-colors tracking-wider uppercase">
+                      View details →
+                    </span>
+                  </div>
 
-                {/* Bottom accent line — slides in on hover */}
-                <div className="absolute bottom-0 left-0 h-[1.5px] w-0 group-hover:w-full bg-gradient-to-r from-transparent via-neutral-500 to-transparent transition-all duration-500 ease-out" />
+                  {/* Bottom accent line — slides in on hover */}
+                  <div className="absolute bottom-0 left-0 h-[1.5px] w-0 group-hover:w-full bg-gradient-to-r from-transparent via-neutral-500 to-transparent transition-all duration-500 ease-out" />
+                </div>
               </motion.div>
             );
           })}
         </motion.div>
+
+        {/* ── Mobile: Swipe Carousel (Shown one by one on small screens) ── */}
+        <div className="block md:hidden w-full relative px-2">
+          <div className="relative w-full h-[280px] overflow-visible flex items-center justify-center">
+            <AnimatePresence initial={false} custom={direction}>
+              {servicesList.map((svc, idx) => {
+                if (idx !== activeMobileIdx) return null;
+                const Icon = svc.icon;
+                const theme = colorThemes[svc.iconColor];
+                return (
+                  <motion.div
+                    key={svc.id}
+                    custom={direction}
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: "spring", stiffness: 300, damping: 30 },
+                      opacity: { duration: 0.2 },
+                    }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.6}
+                    onDragEnd={(e, { offset, velocity }) => {
+                      const swipe = swipePower(offset.x, velocity.x);
+                      if (swipe < -swipeConfidenceThreshold) {
+                        handleNext();
+                      } else if (swipe > swipeConfidenceThreshold) {
+                        handlePrev();
+                      }
+                    }}
+                    onClick={() => setSelectedService(serviceDetailsData[svc.id] || null)}
+                    className="absolute w-full h-full cursor-pointer select-none touch-pan-y"
+                  >
+                    <div className="relative rounded-2xl p-[1px] bg-neutral-900 overflow-hidden h-full">
+                      {/* Inner card body */}
+                      <div className="relative rounded-[15px] bg-[#070707] border border-neutral-900/60 flex flex-col justify-between h-full p-6 text-left">
+                        {/* Top: number + icon circle */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-neutral-700">
+                            {String(idx + 1).padStart(2, "0")}
+                          </span>
+                          <div className={`w-9 h-9 rounded-full border flex items-center justify-center ${theme.iconGlowClass}`}>
+                            <Icon className="w-4 h-4" />
+                          </div>
+                        </div>
+
+                        {/* Divider */}
+                        <div className="border-t border-neutral-900 w-full my-4" />
+
+                        {/* Content */}
+                        <div className="flex-1 flex flex-col gap-2 justify-center">
+                          <div className="flex items-center justify-between gap-2">
+                            <h3 className="text-base font-semibold text-white tracking-tight leading-snug">
+                              {svc.name}
+                            </h3>
+                            <ArrowUpRight className={`w-4 h-4 shrink-0 ${svc.iconColor}`} />
+                          </div>
+                          <p className="text-xs text-neutral-400 leading-relaxed">
+                            {svc.desc}
+                          </p>
+                        </div>
+
+                        {/* Footer: price + cta */}
+                        <div className="flex items-center justify-between mt-auto">
+                          <span className={`text-[10px] font-mono font-bold tracking-wider ${svc.iconColor}`}>
+                            {svc.price}
+                          </span>
+                          <span className="text-[10px] font-mono text-neutral-400 tracking-wider uppercase">
+                            View details →
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+
+          {/* Navigation Controls */}
+          <div className="flex items-center justify-center gap-6 mt-6">
+            <button
+              onClick={handlePrev}
+              className="w-10 h-10 rounded-full border border-neutral-900 bg-[#070707] hover:bg-neutral-900 hover:border-neutral-700 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+            <span className="text-xs font-mono text-neutral-500 select-none">
+              {String(activeMobileIdx + 1).padStart(2, "0")} / {String(servicesList.length).padStart(2, "0")}
+            </span>
+            <button
+              onClick={handleNext}
+              className="w-10 h-10 rounded-full border border-neutral-900 bg-[#070707] hover:bg-neutral-900 hover:border-neutral-700 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Detail Modal */}
