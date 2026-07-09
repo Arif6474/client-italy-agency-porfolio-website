@@ -16,40 +16,46 @@ interface Package {
 
 const packages: Package[] = [
   {
-    id: "quick-start",
-    name: "Quick Start",
-    price: 99,
-    desc: "Perfect for establishing a basic brand baseline.",
-    features: ["Professional Logo Design", "5 Social Media Posts", "Email Newsletter Template", "Free Consultation (30min)"],
-  },
-  {
-    id: "micro-business",
-    name: "Micro Business",
-    price: 799,
-    desc: "Built for launch-ready startups.",
-    features: ["Conversion Landing Page", "Basic SEO Foundations", "20 Social Media Posts", "2 Months SLA Support"],
-  },
-  {
-    id: "starter",
-    name: "Starter Pack",
+    id: "studio-standard",
+    name: "Studio Standard",
     price: 2500,
-    desc: "Complete custom website deployment.",
-    features: ["Website Design & Build", "SEO Content Infrastructure", "Full Mobile Responsive", "1 Month SLA Support"],
+    desc: "Complete aesthetic storefronts & custom web architectures.",
+    features: [
+      "Custom Next.js & React Frontend",
+      "Figma Design & Wireframing",
+      "SEO Infrastructure & Web Vitals Audit",
+      "Full Mobile & Tablet Responsive",
+      "1 Month Post-Launch SLA Support"
+    ],
   },
   {
-    id: "professional",
-    name: "Professional",
-    price: 5999,
-    desc: "Bespoke digital architecture for scaling brands.",
-    features: ["Custom Next.js Development", "Growth Marketing Strategy", "Social Media Identity Setup", "Custom AI Chatbot Integration", "3 Months SLA Support"],
+    id: "venice-premium",
+    name: "Venice Premium",
+    price: 5000,
+    desc: "Bespoke digital architectures & custom AI agent automations.",
+    features: [
+      "Everything in Studio Standard",
+      "Custom AI Agent & Chatbot Setup",
+      "Interactive Animations & Spotlight Layouts",
+      "Headless E-Commerce & CMS Setup",
+      "CI/CD Pipeline & Cloud Deployment",
+      "3 Months Post-Launch SLA Support"
+    ],
     isPopular: true,
   },
   {
-    id: "enterprise",
-    name: "Enterprise",
-    price: "12,000+",
-    desc: "Full technical suite for complex organizations.",
-    features: ["Full-Stack App Development", "Omnichannel Marketing Campaigns", "Custom LLM Agents Workflows", "Dedicated Support Manager", "12 Months SLA Support"],
+    id: "enterprise-suite",
+    name: "Enterprise Suite",
+    price: "10,000+",
+    desc: "Full digital engineering partner for global products.",
+    features: [
+      "Unlimited Multi-Tenant SaaS Codebase",
+      "Custom LLM Fine-Tuning Workflows",
+      "Advanced BI & Visual Dashboards",
+      "Dedicated DevOps Infrastructure",
+      "Regular Security & Vulnerability Audits",
+      "12 Months Dedicated SLA Support"
+    ],
   },
 ];
 
@@ -57,6 +63,15 @@ export default function Pricing() {
   const [selectedPack, setSelectedPack] = useState<Package | null>(null);
   const [paymentState, setPaymentState] = useState<"idle" | "processing" | "success">("idle");
   const [dots, setDots] = useState<{ id: number; size: number; x: number; y: number; duration: number }[]>([]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { currentTarget, clientX, clientY } = e;
+    const rect = currentTarget.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
 
   useEffect(() => {
     const generated = [...Array(12)].map((_, i) => ({
@@ -66,7 +81,12 @@ export default function Pricing() {
       y: Math.random() * 90 + 5,
       duration: 12 + Math.random() * 10,
     }));
-    setDots(generated);
+    
+    const handle = requestAnimationFrame(() => {
+      setDots(generated);
+    });
+
+    return () => cancelAnimationFrame(handle);
   }, []);
   
   // Payment Form States
@@ -202,6 +222,26 @@ export default function Pricing() {
       <div className="max-w-7xl mx-auto w-full flex flex-col gap-16 relative z-10">
 
         {/* ── Section Header (centered) ── */}
+        
+
+        {/* Precision Grid Brackets & Viewport Borders */}
+        <div className="absolute top-6 left-6 w-5 h-5 border-t border-l border-neutral-900 pointer-events-none select-none opacity-50" />
+        <div className="absolute top-6 right-6 w-5 h-5 border-t border-r border-neutral-900 pointer-events-none select-none opacity-50" />
+        <div className="absolute bottom-6 left-6 w-5 h-5 border-b border-l border-neutral-900 pointer-events-none select-none opacity-50" />
+        <div className="absolute bottom-6 right-6 w-5 h-5 border-b border-r border-neutral-900 pointer-events-none select-none opacity-50" />
+
+        {/* Subtle Horizontal Layout Alignment Line */}
+        <div className="absolute top-[12vh] left-6 right-6 border-b border-dashed border-neutral-900/30 pointer-events-none z-0" />
+
+        {/* Monospace Editorial & Coordinate Info */}
+        <div className="absolute top-8 left-14 hidden md:flex items-center gap-1.5 pointer-events-none select-none opacity-20 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500">
+          <span>Vantelli Investment Config</span>
+        </div>
+        <div className="absolute top-8 right-14 hidden md:flex items-center gap-1.5 pointer-events-none select-none opacity-20 font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500">
+          <span>SYS CODE: V-PRICE.3</span>
+        </div>
+
+        {/* ── Section Header (centered) ── */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -222,7 +262,7 @@ export default function Pricing() {
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08]"
           >
             Service{" "}
-            <span className="font-light text-neutral-400 text-glow">
+            <span className="font-semibold bg-gradient-to-r from-amber-200 via-yellow-100 to-rose-200 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.06)]">
               Packages.
             </span>
           </motion.h2>
@@ -235,166 +275,134 @@ export default function Pricing() {
           </motion.p>
         </motion.div>
 
-        {/* ── Pricing Cards ── */}
+        {/* ── Pricing Cards (3-column layout) ── */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 items-stretch"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto"
         >
           {packages.map((pack, idx) => {
-            if (pack.isPopular) {
-              return (
-                <motion.div
-                  key={pack.id}
-                  variants={itemVariants}
-                  whileInView={{ scale: [0.95, 1.03, 1] }}
-                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.25 }}
-                  viewport={{ once: true }}
-                  className="relative rounded-2xl flex flex-col"
-                  style={{ zIndex: 2 }}
-                >
-                  {/* Outer pulsing glow halo */}
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.45, 0.2] }}
-                    transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-[-8px] rounded-[22px] bg-white/15 blur-[20px] pointer-events-none"
-                  />
+            const isPopular = pack.isPopular;
+            const isEnterprise = pack.id === "enterprise-suite";
+            
+            // Theme settings
+            let borderGlow = "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(255,255,255,0.15),transparent_80%)]";
+            let spotlightColor = "rgba(255, 255, 255, 0.03)";
+            let checkIconClass = "text-neutral-600";
+            let ctaClass = "border-neutral-800 hover:border-neutral-700 hover:bg-neutral-900/30 text-white bg-transparent";
 
-                  {/* White card body */}
-                  <div className="relative rounded-2xl bg-white flex flex-col flex-1 overflow-hidden">
-
-                    {/* Shimmer sweep */}
-                    <motion.div
-                      animate={{ x: ["-120%", "220%"] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", repeatDelay: 2.5 }}
-                      className="absolute inset-0 w-[45%] bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 pointer-events-none z-10"
-                    />
-
-                    {/* Badge tab — drops down from top */}
-                    <div className="absolute -top-px left-1/2 -translate-x-1/2 z-20">
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-[#050505] border border-neutral-800 rounded-b-xl shadow-lg">
-                        <span className="relative flex h-1.5 w-1.5 shrink-0">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
-                        </span>
-                        <span className="text-[8px] font-bold tracking-widest text-white uppercase">
-                          Most Popular
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Top bar: number + label */}
-                    <div className="flex items-center justify-between px-5 pt-7 pb-4">
-                      <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-neutral-400">
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <span className="text-[8px] font-mono text-neutral-400 tracking-wider uppercase">
-                        recommended
-                      </span>
-                    </div>
-
-                    {/* Divider */}
-                    <div className="mx-5 border-t border-neutral-200" />
-
-                    {/* Content */}
-                    <div className="px-5 pt-4 pb-5 flex flex-col flex-1 gap-4">
-                      <div>
-                        <h3 className="text-sm font-semibold text-[#050505] tracking-tight">{pack.name}</h3>
-                        <p className="text-[10px] text-neutral-500 mt-1 leading-normal">{pack.desc}</p>
-                      </div>
-
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-black text-[#050505] tracking-tight">
-                          {typeof pack.price === "number" ? `€${pack.price.toLocaleString()}` : `€${pack.price}`}
-                        </span>
-                        {typeof pack.price === "number" && (
-                          <span className="text-[9px] font-mono text-neutral-500">/one-time</span>
-                        )}
-                      </div>
-
-                      <ul className="space-y-2.5 flex-1 border-t border-neutral-200 pt-4">
-                        {pack.features.map((feat) => (
-                          <li key={feat} className="flex items-start gap-2 text-[11px] text-neutral-600 leading-snug">
-                            <Check className="w-3 h-3 flex-shrink-0 mt-0.5 text-[#050505]" />
-                            <span>{feat}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      {/* Dark CTA with conic border beam */}
-                      <div className="relative p-[1px] rounded-xl overflow-hidden">
-                        <div className="absolute inset-[-200%] bg-[conic-gradient(from_0deg,transparent_50%,#000000_80%,#000000_100%)] animate-[spin_6s_linear_infinite] opacity-50" />
-                        <button
-                          onClick={() => handleCtaClick(pack)}
-                          className="relative w-full py-2.5 rounded-[11px] bg-[#050505] hover:bg-neutral-900 text-white text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer z-10"
-                        >
-                          Get Started
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
+            if (isPopular) {
+              borderGlow = "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(251,191,36,0.3),transparent_80%)]";
+              spotlightColor = "rgba(251, 191, 36, 0.04)";
+              checkIconClass = "text-amber-500";
+              ctaClass = "bg-white text-black hover:bg-neutral-200";
+            } else if (isEnterprise) {
+              borderGlow = "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(139,92,246,0.25),transparent_80%)]";
+              spotlightColor = "rgba(139, 92, 246, 0.04)";
+              checkIconClass = "text-violet-500";
+              ctaClass = "border-violet-900/40 hover:border-violet-600 hover:bg-violet-950/20 text-white bg-transparent";
             }
 
-            // ── Regular cards ──
             return (
               <motion.div
                 key={pack.id}
                 variants={itemVariants}
-                whileHover={{ y: -4, scale: 1.01 }}
+                onMouseMove={handleMouseMove}
+                whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className="group relative rounded-2xl border border-neutral-900 bg-neutral-950/15 hover:bg-neutral-950/40 hover:border-neutral-800 flex flex-col overflow-hidden transition-colors duration-300"
+                className="group relative rounded-2xl p-[1px] bg-neutral-900 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col"
               >
-                {/* Top bar */}
-                <div className="flex items-center justify-between px-5 pt-5 pb-4">
-                  <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-neutral-700 group-hover:text-neutral-500 transition-colors duration-300">
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                </div>
+                {/* Border follow spotlight */}
+                <div className={`absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100 pointer-events-none z-0 ${borderGlow}`} />
 
-                {/* Divider */}
-                <div className="mx-5 border-t border-neutral-900 group-hover:border-neutral-800 transition-colors duration-300" />
+                {/* Popular card halo pulse */}
+                {isPopular && (
+                  <motion.div
+                    animate={{ scale: [1, 1.05, 1], opacity: [0.15, 0.35, 0.15] }}
+                    transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-[-4px] rounded-[20px] bg-amber-500/10 blur-[15px] pointer-events-none z-0"
+                  />
+                )}
 
-                {/* Content */}
-                <div className="px-5 pt-4 pb-5 flex flex-col flex-1 gap-4">
+                {/* Popular Badge tab */}
+                {isPopular && (
+                  <div className="absolute -top-px left-1/2 -translate-x-1/2 z-20">
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-[#050505] border border-amber-500/30 rounded-b-xl shadow-lg">
+                      <span className="relative flex h-1.5 w-1.5 shrink-0">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500" />
+                      </span>
+                      <span className="text-[8px] font-bold tracking-widest text-amber-400 uppercase">
+                        Most Popular
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Card body */}
+                <div 
+                  className="relative rounded-[15px] bg-[#070707]/90 hover:bg-[#070707]/95 border border-neutral-900/40 group-hover:border-neutral-800/30 transition-all duration-300 flex flex-col justify-between overflow-hidden z-10 h-full p-6 text-left flex-1"
+                  style={{
+                    backgroundImage: `radial-gradient(350px circle at var(--mouse-x, -400px) var(--mouse-y, -400px), ${spotlightColor}, transparent 80%)`
+                  }}
+                >
+                  {/* Top Header */}
                   <div>
-                    <h3 className="text-sm font-semibold text-white tracking-tight">{pack.name}</h3>
-                    <p className="text-[10px] text-neutral-600 mt-1 leading-normal group-hover:text-neutral-500 transition-colors duration-300">
-                      {pack.desc}
-                    </p>
+                    <div className="flex items-center justify-between pb-4">
+                      <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-neutral-700 group-hover:text-neutral-500 transition-colors duration-300">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      {isPopular && (
+                        <span className="text-[8px] font-mono text-amber-500/80 tracking-wider uppercase font-semibold">
+                          Recommended
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="border-t border-neutral-900/60 group-hover:border-neutral-800/50 transition-colors duration-300 w-full mb-5" />
+
+                    <div>
+                      <h3 className="text-base font-semibold text-white tracking-tight leading-snug">
+                        {pack.name}
+                      </h3>
+                      <p className="text-[11px] text-neutral-500 mt-1 leading-normal">
+                        {pack.desc}
+                      </p>
+                    </div>
+
+                    <div className="flex items-baseline gap-1 my-5">
+                      <span className="text-3xl font-black text-white tracking-tight">
+                        {typeof pack.price === "number" ? `€${pack.price.toLocaleString()}` : `€${pack.price}`}
+                      </span>
+                      {typeof pack.price === "number" && (
+                        <span className="text-[9px] font-mono text-neutral-600">/one-time</span>
+                      )}
+                    </div>
+
+                    <ul className="space-y-2.5 border-t border-neutral-900 pt-4 mb-8">
+                      {pack.features.map((feat) => (
+                        <li key={feat} className="flex items-start gap-2 text-[11px] text-neutral-400 leading-snug">
+                          <Check className={`w-3.5 h-3.5 flex-shrink-0 mt-0.5 ${checkIconClass}`} />
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-black text-white tracking-tight">
-                      {typeof pack.price === "number" ? `€${pack.price.toLocaleString()}` : `€${pack.price}`}
-                    </span>
-                    {typeof pack.price === "number" && (
-                      <span className="text-[9px] font-mono text-neutral-600">/one-time</span>
-                    )}
-                  </div>
-
-                  <ul className="space-y-2.5 flex-1 border-t border-neutral-900 pt-4">
-                    {pack.features.map((feat) => (
-                      <li key={feat} className="flex items-start gap-2 text-[11px] text-neutral-500 group-hover:text-neutral-400 leading-snug transition-colors duration-300">
-                        <Check className="w-3 h-3 flex-shrink-0 mt-0.5 text-neutral-600" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-
+                  {/* CTA Button */}
                   <button
                     onClick={() => handleCtaClick(pack)}
-                    className="w-full py-2.5 rounded-xl border border-neutral-800 hover:border-neutral-700 text-white text-xs font-semibold uppercase tracking-wider bg-transparent hover:bg-neutral-900/30 transition-all duration-300 cursor-pointer"
+                    className={`w-full py-2.5 rounded-xl border text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer ${ctaClass}`}
                   >
-                    {pack.id === "enterprise" ? "Contact Sales" : "Get Started"}
+                    {isEnterprise ? "Contact Sales" : "Get Started"}
                   </button>
+
                 </div>
 
                 {/* Bottom accent line */}
-                <div className="absolute bottom-0 left-0 h-[1.5px] w-0 group-hover:w-full bg-gradient-to-r from-transparent via-neutral-500 to-transparent transition-all duration-500 ease-out" />
+                <div className="absolute bottom-0 left-0 h-[1.5px] w-0 group-hover:w-full bg-gradient-to-r from-transparent via-neutral-500 to-transparent transition-all duration-500 ease-out z-20" />
               </motion.div>
             );
           })}
