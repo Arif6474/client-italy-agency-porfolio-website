@@ -23,24 +23,27 @@ const LOCATIONS = [
   { name: "Tokyo", lat: 35.6762, lon: 139.6503 },
   { name: "London", lat: 51.5074, lon: -0.1278 },
   { name: "Sydney", lat: -33.8688, lon: 151.2093 },
-  { name: "San Francisco", lat: 37.7749, lon: -122.4194 },
-  { name: "Singapore", lat: 1.3521, lon: 103.8198 },
-  { name: "Paris", lat: 48.8566, lon: 2.3522 },
-  { name: "Dubai", lat: 25.2048, lon: 55.2708 },
+  { name: "São Paulo", lat: -23.5505, lon: -46.6333 },
+  { name: "Cape Town", lat: -33.9249, lon: 18.4241 },
+  { name: "Cairo", lat: 30.0444, lon: 31.2357 },
+  { name: "Buenos Aires", lat: -34.6037, lon: -58.3816 },
+  { name: "Vancouver", lat: 49.2827, lon: -123.1207 },
+  { name: "McMurdo", lat: -77.8460, lon: 166.6605 },
 ];
 
 const CONNECTIONS = [
   [0, 3], // Venezia -> London
-  [0, 7], // Venezia -> Paris
-  [0, 8], // Venezia -> Dubai
-  [3, 1], // London -> New York
-  [7, 1], // Paris -> New York
-  [1, 5], // New York -> San Francisco
-  [5, 2], // San Francisco -> Tokyo
-  [6, 2], // Singapore -> Tokyo
-  [8, 6], // Dubai -> Singapore
-  [6, 4], // Singapore -> Sydney
+  [0, 7], // Venezia -> Cairo
+  [7, 6], // Cairo -> Cape Town
+  [6, 5], // Cape Town -> São Paulo
+  [5, 8], // São Paulo -> Buenos Aires
+  [8, 1], // Buenos Aires -> New York
+  [1, 3], // New York -> London
+  [1, 9], // New York -> Vancouver
+  [9, 2], // Vancouver -> Tokyo
   [2, 4], // Tokyo -> Sydney
+  [4, 10], // Sydney -> McMurdo
+  [10, 8], // McMurdo -> Buenos Aires
 ];
 
 export default function Globe() {

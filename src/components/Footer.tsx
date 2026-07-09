@@ -13,13 +13,13 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-[#050505] border-t border-neutral-900/60 py-16 relative overflow-hidden flex flex-col justify-center items-center">
-      
-      {/* ── Background Grid Pattern & Cyan Neon Glow ── */}
-      <div className="absolute inset-0 opacity-[0.12] bg-[linear-gradient(to_right,rgba(6,182,212,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(6,182,212,0.08)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[220px] rounded-full bg-cyan-500/10 blur-[110px] pointer-events-none" />
-      
+
+      {/* ── Background Grid Pattern & Stealth Neutral Glow ── */}
+      <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[220px] rounded-full bg-white/5 blur-[110px] pointer-events-none" />
+
       <div className="max-w-7xl mx-auto w-full px-6 md:px-12 flex flex-col items-center gap-16 relative z-10">
-        
+
         {/* ── Massive Centered Outlined Logo ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -35,7 +35,7 @@ export default function Footer() {
 
         {/* ── Bottom Meta Row ── */}
         <div className="w-full border-t border-neutral-900/60 pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-[11px] font-mono text-neutral-500">
-          
+
           {/* Social Links */}
           <div className="flex items-center gap-4">
             <span className="text-neutral-600 font-sans tracking-wide">Follow us on</span>
