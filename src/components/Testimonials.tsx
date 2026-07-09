@@ -143,9 +143,8 @@ function MarqueeRow({
       <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
 
       <div
-        className={`flex w-max ${
-          reverse ? "animate-[marquee-reverse_35s_linear_infinite]" : "animate-[marquee_35s_linear_infinite]"
-        } hover:[animation-play-state:paused]`}
+        className={`flex w-max ${reverse ? "animate-[marquee-reverse_35s_linear_infinite]" : "animate-[marquee_35s_linear_infinite]"
+          } hover:[animation-play-state:paused]`}
       >
         {doubled.map((item, idx) => (
           <TestimonialCard key={idx} item={item} />

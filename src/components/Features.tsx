@@ -179,9 +179,7 @@ export default function Features() {
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08]"
           >
             High Performance.{" "}
-            <span className="font-semibold bg-gradient-to-r from-amber-200 via-yellow-100 to-rose-200 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.06)]">
-              Zero Compromise.
-            </span>
+            <span className="font-light text-neutral-400">Zero Compromise.</span>
           </motion.h2>
 
           <motion.p
