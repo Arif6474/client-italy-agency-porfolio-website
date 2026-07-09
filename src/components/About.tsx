@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, Variants } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, Variants, useInView } from "framer-motion";
 import { Sparkles, Hammer, Layers, TrendingUp, Cpu } from "lucide-react";
 
 interface BgDot {
@@ -10,6 +10,52 @@ interface BgDot {
   x: number;
   y: number;
   duration: number;
+}
+
+interface CountUpProps {
+  target: number;
+  duration?: number;
+  suffix?: string;
+  prefix?: string;
+}
+
+function CountUp({ target, duration = 1.8, suffix = "", prefix = "" }: CountUpProps) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.5 });
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const start = 0;
+    const end = target;
+    const totalMiliseconds = duration * 1000;
+    const startTime = performance.now();
+
+    const updateCount = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      if (elapsed >= totalMiliseconds) {
+        setCount(end);
+        return;
+      }
+      
+      const progress = elapsed / totalMiliseconds;
+      const easeProgress = progress * (2 - progress); // easeOutQuad
+      
+      setCount(Math.floor(start + (end - start) * easeProgress));
+      requestAnimationFrame(updateCount);
+    };
+
+    requestAnimationFrame(updateCount);
+  }, [isInView, target, duration]);
+
+  return (
+    <span ref={ref}>
+      {prefix}
+      {count}
+      {suffix}
+    </span>
+  );
 }
 
 export default function About() {
@@ -23,7 +69,12 @@ export default function About() {
       y: Math.random() * 90 + 5,
       duration: 12 + Math.random() * 10,
     }));
-    setDots(generated);
+    
+    const handle = requestAnimationFrame(() => {
+      setDots(generated);
+    });
+
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   const containerVariants: Variants = {
@@ -71,10 +122,10 @@ export default function About() {
   ];
 
   const stats = [
-    { value: "120+", label: "Projects Delivered" },
-    { value: "98%", label: "Client Satisfaction" },
-    { value: "60%", label: "Support Overhead Cut" },
-    { value: "4+", label: "Years in Venice" },
+    { target: 120, suffix: "+", label: "Projects Delivered" },
+    { target: 98, suffix: "%", label: "Client Satisfaction" },
+    { target: 60, suffix: "%", label: "Support Overhead Cut" },
+    { target: 4, suffix: "+", label: "Years in Venice" },
   ];
 
   return (
@@ -196,10 +247,10 @@ export default function About() {
               variants={itemVariants}
               className="group flex flex-col items-center justify-center gap-1 py-8 px-4 bg-[#050505] hover:bg-neutral-950/80 transition-colors duration-300 text-center"
             >
-              <span className="text-3xl md:text-4xl font-bold text-white tracking-tight group-hover:text-glow transition-all duration-300">
-                {s.value}
+              <span className="text-3xl md:text-6xl font-bold text-white tracking-tight group-hover:text-glow transition-all duration-300">
+                <CountUp target={s.target} suffix={s.suffix} />
               </span>
-              <span className="text-[10px] font-mono text-neutral-600 uppercase tracking-[0.15em]">
+              <span className="text-[11px] font-mono text-neutral-600 uppercase tracking-[0.15em]">
                 {s.label}
               </span>
             </motion.div>
@@ -207,45 +258,7 @@ export default function About() {
         </motion.div>
 
         {/* ── Values Grid ── */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-        >
-          {values.map((val) => {
-            const Icon = val.icon;
-            return (
-              <motion.div
-                key={val.num}
-                variants={itemVariants}
-                className="group relative p-[1px] rounded-2xl overflow-hidden"
-              >
-                {/* Conic-gradient border beam on hover */}
-                <div className="absolute inset-[-200%] bg-[conic-gradient(from_0deg,transparent_60%,#ffffff_88%,#ffffff_100%)] animate-[spin_8s_linear_infinite] opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
-
-                {/* Card body */}
-                <div className="relative rounded-[15px] bg-neutral-950/40 hover:bg-neutral-950/70 border border-neutral-900 group-hover:border-neutral-800 transition-all duration-300 flex flex-col justify-between text-left h-[220px] p-6 z-10">
-                  <div className="flex justify-between items-start">
-                    <span className="text-[10px] font-mono font-bold tracking-wider text-neutral-700 group-hover:text-neutral-400 transition-colors duration-300">
-                      {val.num} /
-                    </span>
-                    <Icon className="w-4 h-4 text-neutral-600 group-hover:text-white transition-colors duration-300" />
-                  </div>
-                  <div className="mt-auto space-y-1.5">
-                    <h3 className="text-sm font-semibold tracking-tight text-white">
-                      {val.title}
-                    </h3>
-                    <p className="text-xs text-neutral-600 group-hover:text-neutral-400 leading-normal line-clamp-3 transition-colors duration-300">
-                      {val.desc}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+       
 
       </div>
     </section>
