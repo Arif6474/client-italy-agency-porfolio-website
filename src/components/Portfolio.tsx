@@ -99,7 +99,7 @@ const portfolioList: PortfolioItem[] = [
     id: "restaurant",
     tag: "Full Service",
     title: "Restaurant Brand Launch",
-    description: "Complete localized Venice branding, food video, and local search optimization campaign. Tripled reservation velocity.",
+    description: "Complete localized Venezia branding, food video, and local search optimization campaign. Tripled reservation velocity.",
     icon: Utensils,
     image: "/images/restaurant.png",
     metrics: [
@@ -235,14 +235,14 @@ const portfolioDetailsData: Record<string, PortfolioDetail> = {
   restaurant: {
     id: "restaurant",
     tag: "Full Service",
-    title: "Fine Dining Restaurant Venice Launch",
+    title: "Fine Dining Restaurant Venezia Launch",
     image: "/images/restaurant.png",
-    overview: "Complete identity redesign, localization, and launch campaign for a fine dining spot in Mestre/Venice. Merged sensory offline photography with optimized local SEO listings.",
+    overview: "Complete identity redesign, localization, and launch campaign for a fine dining spot in Mestre/Venezia. Merged sensory offline photography with optimized local SEO listings.",
     strategyHeading: "Scope of Work",
     strategyItems: [
       "Bespoke visual identity suite (vector logo, typography, paper stocks).",
       "Stunning, responsive reservation web portal.",
-      "High-end food visuals capturing seasonal Venice plates.",
+      "High-end food visuals capturing seasonal Venezia plates.",
       "Local SEO maps citation updates capturing tourist lookups.",
       "Targeted digital placements capturing dining leads.",
     ],
@@ -326,7 +326,7 @@ export default function Portfolio() {
       />
 
       <div className="max-w-7xl mx-auto w-full flex flex-col gap-16 relative z-10">
-        
+
         {/* ── Section Header (centered) ── */}
         <motion.div
           variants={containerVariants}
@@ -436,7 +436,7 @@ export default function Portfolio() {
       >
         {selectedProject && (
           <div className="space-y-6">
-            
+
             {/* Modal Hero Image */}
             <div className="w-full aspect-[16/9] rounded-xl overflow-hidden border border-neutral-900">
               <img

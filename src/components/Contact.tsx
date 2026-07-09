@@ -188,125 +188,125 @@ export default function Contact() {
           <motion.div variants={itemVariants} className="lg:col-span-7 w-full">
             <div className="relative rounded-2xl bg-neutral-950/65 p-7 md:p-9 border border-neutral-900 hover:border-neutral-800 transition-colors duration-300">
 
-                <AnimatePresence mode="wait">
-                  {!submitSuccess ? (
-                    <motion.form
-                      key="contact-form"
-                      onSubmit={handleSubmit}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="space-y-5"
-                    >
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        {/* Name */}
-                        <div className="flex flex-col gap-2 text-left">
-                          <label htmlFor="name" className={labelClass}>
-                            <span className="w-1 h-1 rounded-full bg-cyan-500" />
-                            Full Name *
-                          </label>
-                          <input id="name" type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Lucia Santoro" className={inputClass} />
-                          {errors.name && <span className="text-[9px] font-mono text-red-500 mt-1">{errors.name}</span>}
-                        </div>
-                        {/* Email */}
-                        <div className="flex flex-col gap-2 text-left">
-                          <label htmlFor="email" className={labelClass}>
-                            <span className="w-1 h-1 rounded-full bg-cyan-500" />
-                            Email Address *
-                          </label>
-                          <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="lucia@fashionhouse.it" className={inputClass} />
-                          {errors.email && <span className="text-[9px] font-mono text-red-500 mt-1">{errors.email}</span>}
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        {/* Company */}
-                        <div className="flex flex-col gap-2 text-left">
-                          <label htmlFor="company" className={labelClass}>
-                            <span className="w-1.5 h-1.5 border border-cyan-500/60 rounded-full" />
-                            Company Name
-                          </label>
-                          <input id="company" type="text" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Fashion House Italia" className={inputClass} />
-                        </div>
-                        {/* Service select */}
-                        <div className="flex flex-col gap-2 text-left">
-                          <label htmlFor="service" className={labelClass}>
-                            <span className="w-1 h-1 rounded-full bg-cyan-500" />
-                            Service Interested In *
-                          </label>
-                          <select id="service" required value={service} onChange={(e) => setService(e.target.value)} className={inputClass + " bg-neutral-950/95 cursor-pointer appearance-none"}>
-                            <option value="">Select a service category</option>
-                            <option value="digital-marketing">Digital Marketing</option>
-                            <option value="web-development">Web Development</option>
-                            <option value="ai-services">AI Bot & Agent</option>
-                            <option value="social-media">Social Media Management</option>
-                            <option value="other">Other / Custom Scope</option>
-                          </select>
-                          {errors.service && <span className="text-[9px] font-mono text-red-500 mt-1">{errors.service}</span>}
-                        </div>
-                      </div>
-
-                      {/* Message */}
+              <AnimatePresence mode="wait">
+                {!submitSuccess ? (
+                  <motion.form
+                    key="contact-form"
+                    onSubmit={handleSubmit}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-5"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      {/* Name */}
                       <div className="flex flex-col gap-2 text-left">
-                        <label htmlFor="message" className={labelClass}>
+                        <label htmlFor="name" className={labelClass}>
                           <span className="w-1 h-1 rounded-full bg-cyan-500" />
-                          Message Details *
+                          Full Name *
                         </label>
-                        <textarea id="message" required value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Outline your project scope or objectives..." rows={5} className={inputClass + " resize-none"} />
-                        {errors.message && <span className="text-[9px] font-mono text-red-500 mt-1">{errors.message}</span>}
+                        <input id="name" type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Lucia Santoro" className={inputClass} />
+                        {errors.name && <span className="text-[9px] font-mono text-red-500 mt-1">{errors.name}</span>}
                       </div>
+                      {/* Email */}
+                      <div className="flex flex-col gap-2 text-left">
+                        <label htmlFor="email" className={labelClass}>
+                          <span className="w-1 h-1 rounded-full bg-cyan-500" />
+                          Email Address *
+                        </label>
+                        <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="lucia@fashionhouse.it" className={inputClass} />
+                        {errors.email && <span className="text-[9px] font-mono text-red-500 mt-1">{errors.email}</span>}
+                      </div>
+                    </div>
 
-                      {/* CTA button */}
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full py-3 rounded-xl bg-white hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 text-[#050505] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <div className="w-3.5 h-3.5 rounded-full border border-neutral-600 border-t-neutral-200 animate-spin" />
-                            Sending...
-                          </>
-                        ) : (
-                          <>
-                            Send Inquiry
-                            <Send className="w-3.5 h-3.5" />
-                          </>
-                        )}
-                      </button>
-                    </motion.form>
-                  ) : (
-                    <motion.div
-                      key="submit-success-state"
-                      initial={{ opacity: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="py-16 text-center space-y-4"
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      {/* Company */}
+                      <div className="flex flex-col gap-2 text-left">
+                        <label htmlFor="company" className={labelClass}>
+                          <span className="w-1.5 h-1.5 border border-cyan-500/60 rounded-full" />
+                          Company Name
+                        </label>
+                        <input id="company" type="text" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Fashion House Italia" className={inputClass} />
+                      </div>
+                      {/* Service select */}
+                      <div className="flex flex-col gap-2 text-left">
+                        <label htmlFor="service" className={labelClass}>
+                          <span className="w-1 h-1 rounded-full bg-cyan-500" />
+                          Service Interested In *
+                        </label>
+                        <select id="service" required value={service} onChange={(e) => setService(e.target.value)} className={inputClass + " bg-neutral-950/95 cursor-pointer appearance-none"}>
+                          <option value="">Select a service category</option>
+                          <option value="digital-marketing">Digital Marketing</option>
+                          <option value="web-development">Web Development</option>
+                          <option value="ai-services">AI Bot & Agent</option>
+                          <option value="social-media">Social Media Management</option>
+                          <option value="other">Other / Custom Scope</option>
+                        </select>
+                        {errors.service && <span className="text-[9px] font-mono text-red-500 mt-1">{errors.service}</span>}
+                      </div>
+                    </div>
+
+                    {/* Message */}
+                    <div className="flex flex-col gap-2 text-left">
+                      <label htmlFor="message" className={labelClass}>
+                        <span className="w-1 h-1 rounded-full bg-cyan-500" />
+                        Message Details *
+                      </label>
+                      <textarea id="message" required value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Outline your project scope or objectives..." rows={5} className={inputClass + " resize-none"} />
+                      {errors.message && <span className="text-[9px] font-mono text-red-500 mt-1">{errors.message}</span>}
+                    </div>
+
+                    {/* CTA button */}
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-3 rounded-xl bg-white hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 text-[#050505] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
                     >
-                      <div className="w-12 h-12 rounded-full border border-neutral-800 bg-neutral-950 flex items-center justify-center text-white mx-auto shadow-md text-lg">
-                        ✓
-                      </div>
-                      <div className="space-y-1.5">
-                        <h3 className="text-base font-bold text-white tracking-tight">Message Received</h3>
-                        <p className="text-xs text-neutral-400 max-w-sm mx-auto leading-relaxed">
-                          Thank you for contacting Vantelli. Your query has been logged. Our Venice team will reply via email within 12 business hours.
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => setSubmitSuccess(false)}
-                        className="px-4 py-2 border border-neutral-900 bg-neutral-950 hover:text-white hover:bg-neutral-900 text-neutral-500 text-xs font-mono rounded-xl transition-colors cursor-pointer"
-                      >
-                        Send Another Message
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-3.5 h-3.5 rounded-full border border-neutral-600 border-t-neutral-200 animate-spin" />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          Send Inquiry
+                          <Send className="w-3.5 h-3.5" />
+                        </>
+                      )}
+                    </button>
+                  </motion.form>
+                ) : (
+                  <motion.div
+                    key="submit-success-state"
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="py-16 text-center space-y-4"
+                  >
+                    <div className="w-12 h-12 rounded-full border border-neutral-800 bg-neutral-950 flex items-center justify-center text-white mx-auto shadow-md text-lg">
+                      ✓
+                    </div>
+                    <div className="space-y-1.5">
+                      <h3 className="text-base font-bold text-white tracking-tight">Message Received</h3>
+                      <p className="text-xs text-neutral-400 max-w-sm mx-auto leading-relaxed">
+                        Thank you for contacting Vantelli. Your query has been logged. Our Venezia team will reply via email within 12 business hours.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setSubmitSuccess(false)}
+                      className="px-4 py-2 border border-neutral-900 bg-neutral-950 hover:text-white hover:bg-neutral-900 text-neutral-500 text-xs font-mono rounded-xl transition-colors cursor-pointer"
+                    >
+                      Send Another Message
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </motion.div>
-        </div>
-      </section>
-    );
-  }
+
+        </motion.div>
+      </div>
+    </section>
+  );
+}
 

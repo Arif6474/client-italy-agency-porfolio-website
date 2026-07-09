@@ -29,8 +29,8 @@ const packages: Package[] = [
     ],
   },
   {
-    id: "venice-premium",
-    name: "Venice Premium",
+    id: "Venezia-premium",
+    name: "Venezia Premium",
     price: 5000,
     desc: "Bespoke digital architectures & custom AI agent automations.",
     features: [
@@ -81,14 +81,14 @@ export default function Pricing() {
       y: Math.random() * 90 + 5,
       duration: 12 + Math.random() * 10,
     }));
-    
+
     const handle = requestAnimationFrame(() => {
       setDots(generated);
     });
 
     return () => cancelAnimationFrame(handle);
   }, []);
-  
+
   // Payment Form States
   const [cardName, setCardName] = useState("");
   const [cardEmail, setCardEmail] = useState("");
@@ -150,7 +150,7 @@ export default function Pricing() {
     } else if (!/\S+@\S+\.\S+/.test(cardEmail)) {
       newErrors.cardEmail = "Enter a valid email";
     }
-    
+
     const plainCard = cardNumber.replace(/\s/g, "");
     if (plainCard.length !== 16) {
       newErrors.cardNumber = "Enter a 16-digit card number";
@@ -222,7 +222,7 @@ export default function Pricing() {
       <div className="max-w-7xl mx-auto w-full flex flex-col gap-16 relative z-10">
 
         {/* ── Section Header (centered) ── */}
-        
+
 
         {/* Precision Grid Brackets & Viewport Borders */}
         <div className="absolute top-6 left-6 w-5 h-5 border-t border-l border-neutral-900 pointer-events-none select-none opacity-50" />
@@ -284,7 +284,7 @@ export default function Pricing() {
           {packages.map((pack, idx) => {
             const isPopular = pack.isPopular;
             const isEnterprise = pack.id === "enterprise-suite";
-            
+
             // Theme settings
             let borderGlow = "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(255,255,255,0.15),transparent_80%)]";
             let spotlightColor = "rgba(255, 255, 255, 0.03)";
@@ -340,7 +340,7 @@ export default function Pricing() {
                 )}
 
                 {/* Card body */}
-                <div 
+                <div
                   className="relative rounded-[15px] bg-[#070707]/90 hover:bg-[#070707]/95 border border-neutral-900/40 group-hover:border-neutral-800/30 transition-all duration-300 flex flex-col justify-between overflow-hidden z-10 h-full p-6 text-left flex-1"
                   style={{
                     backgroundImage: `radial-gradient(350px circle at var(--mouse-x, -400px) var(--mouse-y, -400px), ${spotlightColor}, transparent 80%)`
@@ -417,7 +417,7 @@ export default function Pricing() {
       >
         {selectedPack && (
           <div className="space-y-6">
-            
+
             {/* Amount details */}
             <div className="p-4 rounded-xl border border-neutral-900 bg-neutral-950/40 flex justify-between items-center text-left">
               <div>
@@ -432,7 +432,7 @@ export default function Pricing() {
             {/* Payment States Handler */}
             {paymentState === "idle" && (
               <form onSubmit={handlePaymentSubmit} className="space-y-4">
-                
+
                 {/* Full name */}
                 <div className="flex flex-col gap-1.5 text-left">
                   <label htmlFor="cardName" className="text-[10px] font-mono text-neutral-500 uppercase">

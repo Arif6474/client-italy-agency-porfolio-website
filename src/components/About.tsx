@@ -38,10 +38,10 @@ function CountUp({ target, duration = 1.8, suffix = "", prefix = "" }: CountUpPr
         setCount(end);
         return;
       }
-      
+
       const progress = elapsed / totalMiliseconds;
       const easeProgress = progress * (2 - progress); // easeOutQuad
-      
+
       setCount(Math.floor(start + (end - start) * easeProgress));
       requestAnimationFrame(updateCount);
     };
@@ -69,7 +69,7 @@ export default function About() {
       y: Math.random() * 90 + 5,
       duration: 12 + Math.random() * 10,
     }));
-    
+
     const handle = requestAnimationFrame(() => {
       setDots(generated);
     });
@@ -125,7 +125,7 @@ export default function About() {
     { target: 120, suffix: "+", label: "Projects Delivered" },
     { target: 98, suffix: "%", label: "Client Satisfaction" },
     { target: 60, suffix: "%", label: "Support Overhead Cut" },
-    { target: 4, suffix: "+", label: "Years in Venice" },
+    { target: 4, suffix: "+", label: "Years in Venezia" },
   ];
 
   return (
@@ -216,7 +216,7 @@ export default function About() {
               variants={itemVariants}
               className="text-neutral-400 text-sm md:text-base leading-relaxed"
             >
-              Located in Venice, Italy, Vantelli was founded on a simple
+              Located in Venezia, Italy, Vantelli was founded on a simple
               principle: digital products should be as functional as they are
               beautiful. We do not design generic web pages — we craft bespoke
               digital flagship stores and automation structures.
@@ -258,7 +258,7 @@ export default function About() {
         </motion.div>
 
         {/* ── Values Grid ── */}
-       
+
 
       </div>
     </section>

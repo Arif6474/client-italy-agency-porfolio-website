@@ -74,11 +74,10 @@ export default function Navbar({ scrollContainerRef }: NavbarProps) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
             ? "bg-[#050505]/75  border-neutral-900/60 backdrop-blur-md py-4"
             : "bg-transparent py-6"
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
           {/* Logo */}
@@ -94,7 +93,7 @@ export default function Navbar({ scrollContainerRef }: NavbarProps) {
               </span>
             </span>
             <span className="text-[9px] uppercase tracking-[0.4em] text-neutral-500 font-mono mt-0.5">
-              VENICE / ITALY
+              Venezia / ITALY
             </span>
           </a>
 
@@ -107,9 +106,8 @@ export default function Navbar({ scrollContainerRef }: NavbarProps) {
                   key={item.name}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`relative px-4 py-1.5 text-xs tracking-wider uppercase font-medium transition-colors duration-300 rounded-full ${
-                    isActive ? "text-white" : "text-neutral-400 hover:text-neutral-200"
-                  }`}
+                  className={`relative px-4 py-1.5 text-xs tracking-wider uppercase font-medium transition-colors duration-300 rounded-full ${isActive ? "text-white" : "text-neutral-400 hover:text-neutral-200"
+                    }`}
                 >
                   {item.name}
                   {isActive && (
@@ -175,9 +173,8 @@ export default function Navbar({ scrollContainerRef }: NavbarProps) {
                     className="text-3xl font-bold tracking-wider uppercase text-left relative flex items-center"
                   >
                     <span
-                      className={`mr-4 text-xs font-mono ${
-                        isActive ? "text-white" : "text-neutral-600"
-                      }`}
+                      className={`mr-4 text-xs font-mono ${isActive ? "text-white" : "text-neutral-600"
+                        }`}
                     >
                       0{index + 1}.
                     </span>
