@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, Variants } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Star, LayoutGrid } from "lucide-react";
 import Globe from "./ui/Globe";
 
@@ -13,8 +13,23 @@ interface BgDot {
   duration: number;
 }
 
+const SERVICES = [
+  "Web Craftsmanship",
+  "UI/UX Architecture",
+  "Growth Systems",
+  "Brand Strategy"
+];
+
 export default function Hero() {
   const [dots, setDots] = useState<BgDot[]>([]);
+  const [serviceIndex, setServiceIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setServiceIndex((prev) => (prev + 1) % SERVICES.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const generated = [...Array(40)].map((_, i) => ({
@@ -147,8 +162,19 @@ export default function Hero() {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] w-full"
           >
             Premium Digital Excellence <br />
-            <span className="font-semibold bg-gradient-to-r from-amber-200 via-yellow-100 to-rose-200 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.06)]">
-              Vantelli
+            <span className="relative inline-block h-[1.15em] w-full overflow-hidden mt-1 align-bottom">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={serviceIndex}
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: "0%", opacity: 1 }}
+                  exit={{ y: "-100%", opacity: 0 }}
+                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute left-0 right-0 font-semibold bg-gradient-to-r from-amber-200 via-yellow-100 to-rose-200 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(251,191,36,0.06)] block"
+                >
+                  {SERVICES[serviceIndex]}
+                </motion.span>
+              </AnimatePresence>
             </span>
           </motion.h1>
 
