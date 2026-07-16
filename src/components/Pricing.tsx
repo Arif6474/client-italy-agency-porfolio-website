@@ -274,7 +274,7 @@ export default function Pricing() {
           initial="hidden"
           whileInView="visible"
           viewport={{ root: scrollContainerRef || undefined, once: true, amount: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto"
+          className="flex overflow-x-auto md:grid md:grid-cols-3 gap-4 md:gap-8 items-stretch max-w-6xl mx-auto w-full px-6 md:px-0 snap-x snap-mandatory no-scrollbar pb-6 md:pb-0"
         >
           {packages.map((pack, idx) => {
             const isPopular = pack.isPopular;
@@ -285,17 +285,20 @@ export default function Pricing() {
             let spotlightColor = "rgba(255, 255, 255, 0.03)";
             let checkIconClass = "text-neutral-500";
             let ctaClass = "border-neutral-800 hover:border-neutral-700 hover:bg-neutral-900/30 text-white bg-transparent";
+            let orderClass = "order-2 md:order-1";
 
             if (isPopular) {
               borderGlow = "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(251,191,36,0.3),transparent_80%)]";
               spotlightColor = "rgba(251, 191, 36, 0.04)";
               checkIconClass = "text-amber-500";
               ctaClass = "bg-white text-black hover:bg-neutral-200";
+              orderClass = "order-1 md:order-2";
             } else if (isEnterprise) {
               borderGlow = "group-hover:bg-[radial-gradient(250px_circle_at_var(--mouse-x,-400px)_var(--mouse-y,-400px),rgba(139,92,246,0.25),transparent_80%)]";
               spotlightColor = "rgba(139, 92, 246, 0.04)";
               checkIconClass = "text-violet-500";
               ctaClass = "border-violet-900/40 hover:border-violet-600 hover:bg-violet-950/20 text-white bg-transparent";
+              orderClass = "order-3 md:order-3";
             }
 
             return (
@@ -305,7 +308,7 @@ export default function Pricing() {
                 onMouseMove={handleMouseMove}
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className="group relative rounded-2xl p-[1px] bg-neutral-900 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col"
+                className={`group relative rounded-2xl p-[1px] bg-neutral-900 transition-all duration-300 overflow-hidden cursor-pointer flex flex-col snap-start shrink-0 w-[80vw] sm:w-[350px] md:w-auto ${orderClass}`}
               >
                 {/* Border follow spotlight */}
                 <div className={`absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100 pointer-events-none z-0 ${borderGlow}`} />
